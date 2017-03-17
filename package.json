@@ -1,0 +1,27 @@
+{
+  "name": "HVAC-SeniorProject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoonRock28/HVAC-SeniorProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoonRock28/HVAC-SeniorProject/issues"
+  },
+  "homepage": "https://github.com/MoonRock28/HVAC-SeniorProject#readme",
+  "dependencies": {
+    "mongoose": "^4.8.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
