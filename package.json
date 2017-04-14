@@ -2,9 +2,9 @@
   "name": "HVAC-SeniorProject",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha src/test"
   },
   "repository": {
     "type": "git",
