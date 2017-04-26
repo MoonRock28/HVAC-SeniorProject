@@ -1,8 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
 const Fan = require('../models/fan');
-const belt = require('./serveBelt');
-const location = require('./serveLocation');
 
 function getFan(objectId, callback) {
     Fan.findOne({_id: objectId}).then( (record) => {
@@ -13,40 +11,40 @@ function getFan(objectId, callback) {
 function editFan(fan, objectId, callback) {
     Fan.findOne({_id: objectId}).then( (record) => {
         record.name = fan.name;
-        record.location;
+        record.location = fan.location;
+        record.fanSheave = fan.fanSheave;
+        record.motorSheave = fan.motorSheave;
+        record.nextDateToCheck = fan.nextDateToCheck;
+        record.lastDateMaintained = fan.lastDateMaintained;
+        record.statusColor = fan.statusColor;
+        record.additionalNotes = fan.additionalNotes;
+        record.save().then( () => {
+            callback(null, objectId);
+        });
     });
 }
 
-function updateBelts(existing, updates, extra, callback) {
-    let results = [];
-
-    if(existing.length !== updates.length) {
-
-        updates.forEach( (updateBelt) => {
-
-            existing.forEach( (existingBelt) => {
-
-                if (existingBelt !== updateBelt) {
-
-                }
-            });
-
-        });
-
-    }
-
-}
-
-function updateLocation(location, callback) {
-
-}
-
 function newFan(fan, callback) {
+    let thisFan = new Fan({
+        name: fan.name,
+        location: fan.location,
+        fanSheave: fan.fanSheave,
+        motorSheave: fan.motorSheave,
+        nextDateToCheck: fan.nextDateToCheck,
+        lastDateMaintained: fan.lastDateMaintained,
+        statusColor: fan.statusColor,
+        additionalNotes: fan.additionalNotes
+    });
 
+    thisFan.save().then( () => {
+        callback(null, thisFan._id);
+    });
 }
 
 function deleteFan(objectId, callback) {
-
+    Fan.findOneAndRemove({_id: objectId}).then( () => {
+        callback(null);
+    });
 }
 
 module.exports = {
@@ -54,4 +52,4 @@ module.exports = {
     editFan: editFan,
     newFan: newFan,
     deleteFan: deleteFan
-}
+};

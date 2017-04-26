@@ -3,7 +3,7 @@ const Building = require('../models/building');
 
 //describe tests
 describe('Finding records ', () => {
-  var Hart;
+  let Hart;
   beforeEach( (done) => {
       Hart = new Building({
       name: 'Hart',

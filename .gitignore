@@ -1,2 +1,3 @@
-./node_modules
-.mongoStart.txt
+node_modules
+mongoStart.txt
+.idea/
