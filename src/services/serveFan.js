@@ -14,6 +14,8 @@ function editFan(fan, objectId, callback) {
         record.location = fan.location;
         record.fanSheave = fan.fanSheave;
         record.motorSheave = fan.motorSheave;
+        record.belts = fan.belts;
+        record.extraBelts = fan.extraBelts;
         record.nextDateToCheck = fan.nextDateToCheck;
         record.lastDateMaintained = fan.lastDateMaintained;
         record.statusColor = fan.statusColor;
