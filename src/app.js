@@ -1,51 +1,58 @@
 const express = require('express');
 const app = express();
 
+app.set('view engine', 'ejs');
+
+// app.use('/assets', express.static('assets'));
 // app.use(express.static(path.join(__dirname, 'assets')));
 
 app.get('/', (req, res) => {
    // console.log('in the default route. home page');
-   res.send('this is the home page');
+   res.render('home'/*, {homeContent}*/);
 });
 
-app.get('/building', (req, res) => {
+app.get('/building/:id', (req, res) => {
     // console.log('in the default route.');
-    res.send('this is the building page');
+    res.render('building' /*, {buildingContent} */);
 });
 
 app.get('/createBuilding', (req, res) => {
-    res.send('this is the createBuilding page');
+    res.render('newDocument'/*, {docType = building} */);
 });
 
-app.post('/editBuilding', (req, res) => {
+app.post('/saveBuilding', (req, res) => {
+    res.render('building'/*, {}*/);
+});
+
+app.post('/editBuilding/:id', (req, res) => {
     console.log('this is the editBuilding route that reroutes to /building');
-    res.send('rerouting to /building');
+    res.render('building'/*, {buildingContent} */);
 });
 
-app.get('/avu', (req, res) => {
-    res.send('this is the avu page');
+app.get('/avu/:id', (req, res) => {
+    res.render('avu'/*, {avuContent}*/);
 });
 
 app.get('/createAvu', (req, res) => {
-    res.send('this is the createAvu page');
+    res.render('newDocument'/*, {docType = avu}*/);
 });
 
-app.post('/editAvu', (req, res) => {
+app.post('/editAvu/:id', (req, res) => {
     console.log('this is the editAvu route that reroutes to /avu');
-    res.send('rerouting to /avu');
+    res.render('avu'/*, {avuContent} */);
 });
 
-app.get('/fan', (req, res) => {
-    res.send('this is the fan page');
+app.get('/fan/:id', (req, res) => {
+    res.render('fan'/*, {fanContent}*/);
 });
 
 app.get('/createFan', (req, res) => {
-    res.send('this is the createFan page');
+    res.render('newDocument'/*, {docType = fan} */);
 });
 
-app.get('/editFan', (req, res) => {
+app.get('/editFan/:id', (req, res) => {
     console.log('this is the editFan route that reroutes to /fan');
-    res.send('rerouting to /fan');
+    res.render('fan'/*, {fanContent}*/);
 });
 
 app.listen(3000);
