@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <div id="header">
+            <p>Placeholder for BYU-I logo</p>
+            <h1>HVAC Stewardship Manager</h1>
+            <h1>Home</h1>
+        </div>
+        <div id="nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/createBuilding">New Building</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <div id="map">
+                <!-- Show the buildings locations on the map -->
+            </div>
+            <div id="buildings">
+            <% buildings.forEach( (building) => {%>
+                <div class="building">
+                    <a href="/building?id=<%= building._id.toString()%>">
+                        <p><%= building.name%></p>
+                        <p>Black Items: <%= building.numBlack%></p>
+                        <p>Red Items: <%= building.numRed%></p>
+                    </a>
+                </div>
+            <% });%>
+            </div>
+            <div id="avus">
+            <% for(let i = 0; i < 10; i++) {%>
+                <div class="avu">
+                    <a href="/avu?id=<% avu[i]._id.toString()%>">
+                        <p><%= avu[i].name%></p>
+                        <p><%= avu[i].nextDateToCheck%></p>
+                        <p><%= avu[i].statusColor%></p>
+                    </a>
+                </div>
+            <%}%>
+            </div>
+            <div id="fans">
+            <% for(let i = 0; i < 10; i++) {%>
+                <div class="fan">
+                    <a href="/fan?id=<% fan[i]._id.toString()%>">
+                        <p><%= fan[i].name%></p>
+                        <p><%= fan[i].nextDateToCheck%></p>
+                        <p><%= fan[i].statusColor%></p>
+                    </a>
+                </div>
+            <%}%>
+            </div>
+
+        </div>
+        <div id="footer">
+
+        </div>
+    </body>
+</html>

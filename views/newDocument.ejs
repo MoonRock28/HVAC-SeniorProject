@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New <%=docType%></title>
+    </head>
+    <body>
+        <div id="header">
+            <p>Placeholder for BYU-I logo</p>
+            <h1>HVAC Stewardship Manager</h1>
+            <h1>New
+
+            <% if(docType === 'building') {%>
+            Building</h1>
+        </div>
+        <div id="nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <form action="/saveBuilding" method="post">
+                <div id="details">
+                    <p>Name:</p>
+                    <input type="text" name="name"><br>
+                </div>
+                <div id="map">
+
+                </div>
+                <input type="submit" value="Create Building"/>
+            </form>
+        </div>
+            <%}%>
+
+            <% if(docType === 'avu') {%>
+            Air Ventilation Unit</h1>
+        </div>
+        <div id="nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/building?id=<%= _id%>"></a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <form action="/saveAvu" method="post">
+                <div id="details">
+                    <p>Name:</p>
+                    <input type="text" name="name"><br>
+                    <input type="date" name="nextDateToCheck"><br>
+                    <input type="text" name="additionalNotes"><br>
+                </div>
+                <div id="map">
+
+                </div>
+                <input type="submit" value="Create Air Ventilation Unit"/>
+            </form>
+        </div>
+            <%}%>
+
+            <% if(docType === 'fan') {%>
+            Fan</h1>
+        </div>
+        <div id="nav">
+
+        </div>
+        <div id="content">
+            <div id="map">
+
+            </div>
+            <div id="details">
+            </div>
+        </div>
+            <%}%>
+
+            <% if(docType === 'belt') {%>
+            Belt</h1>
+        </div>
+        <div id="nav">
+
+        </div>
+        <div id="content">
+            <div id="map">
+
+            </div>
+            <div id="details">
+            </div>
+        </div>
+            <%}%>
+
+            <% if(docType === 'filter') {%>
+            Filter</h1>
+        </div>
+        <div id="nav">
+
+        </div>
+        <div id="content">
+            <div id="map">
+
+            </div>
+            <div id="details">
+            </div>
+        </div>
+            <%}%>
+
+        <div id="footer">
+
+        </div>
+    </body>
+</html>

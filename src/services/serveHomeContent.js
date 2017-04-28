@@ -1,8 +1,8 @@
 'use strict';
 const Home = require('../models/homeContent');
 
-function getHomeContent(objectId, callback) {
-    Home.findOne({_id: objectId}).then( (record) => {
+function getHomeContent(callback) {
+    Home.findOne().then( (record) => {
         callback(null, record);
     });
 }
