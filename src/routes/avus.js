@@ -1,8 +1,14 @@
 'use strict';
+const bodyParser = require('body-parser');
+const urlEncodedParser = bodyParser.urlencoded({ extended: false});
+const avuHandler = require('../handlers/avuHandler');
+const avuService = require('../services/serveAvu');
 
 module.exports = (app) => {
-    app.get('/avu/:id', (req, res) => {
-        res.render('avu'/*, {avuContent}*/);
+    app.get('/avu', (req, res) => {
+        avuService.getAVU(req.query.id, (err, record) => {
+            res.render('avu', record);
+        });
     });
 
     app.get('/createAvu', (req, res) => {
@@ -12,8 +18,11 @@ module.exports = (app) => {
         res.render('newAvu', {id: req.query.id, buildingName: req.query.buildingName, });
     });
 
-    app.post('/saveAvu', (req, res) => {
-
+    app.post('/saveAvu', urlEncodedParser, (req, res) => {
+        console.log(req.body);
+        avuHandler.saveAVU(req.body, (err, objectId) => {
+            res.redirect('/avu?id=' + objectId);
+        });
     });
 
     app.post('/editAvu/:id', (req, res) => {

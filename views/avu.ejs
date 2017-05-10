@@ -5,18 +5,30 @@
     </head>
     <body>
         <div id="header">
-            <p>Placeholder for BYU-I logo</p>
+            <img src=""/>
             <h1>HVAC Stewardship Manager</h1>
-            <h1>Air Ventilation Unit</h1>
+            <h1>Air Ventilation Unit: <%= name%></h1>
         </div>
         <div id="nav">
             <% include partials/nav.ejs %>
         </div>
         <div id="content">
-            <div id="map">
-
-            </div>
             <div id="details">
+                <p>Next Date To Check: <%= nextDateToCheck%></p>
+                <p>Status Color: <%= statusColor%></p>
+                <div id="pFilters">
+
+                </div>
+                <div id="sFilters">
+
+                </div>
+                <div id="eFilters">
+
+                </div>
+                <p>Last Date Maintained: <%= lastDateMaintained%></p>
+                <p>Additional Notes: <%= additionalNotes%></p>
+            </div>
+            <div id="map">
 
             </div>
         </div>
