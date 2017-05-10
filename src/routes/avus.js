@@ -6,9 +6,10 @@ module.exports = (app) => {
     });
 
     app.get('/createAvu', (req, res) => {
+        console.log(req.query.id);
+        console.log(req.query.buildingName);
 
-
-        res.render('newDocument', {docType: 'avu', name: req.query.buildingName, });
+        res.render('newAvu', {id: req.query.id, buildingName: req.query.buildingName, });
     });
 
     app.post('/saveAvu', (req, res) => {

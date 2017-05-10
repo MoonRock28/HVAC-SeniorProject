@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>New Building</title>
+    </head>
+    <body>
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Stewardship Manager</h1>
+        <h1>New AVU</h1>
+    </div>
+    <div id="nav">
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/building?id=<%= id%>"><%= buildingName%></a></li>
+        </ul>
+    </div>
+    <div id="content">
+        <form action="/saveAVU" method="post">
+            <div id="details">
+                <p>Name:<br>
+                <input type="text" name="name"></p>
+                <p>Next Date To Check:<br>
+                <input type="date" name="nextDateToCheck"></p>
+                <p>Additional Notes:<br>
+                <input type="text" name="additionalNotes"></p>
+            </div>
+            <div id="map">
+
+            </div>
+            <input type="submit" value="Save AVU"/>
+        </form>
+    </div>
+
+    <div id="footer">
+
+    </div>
+    </body>
+</html>
