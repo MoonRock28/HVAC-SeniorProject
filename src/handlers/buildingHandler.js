@@ -9,7 +9,9 @@ function saveBuilding(body, callback){
 
     buildingService.newBuilding(newBuilding, (err, objectId) => {
         homeContent.getHomeContent( (err, record) => {
-            record.buildings.push(newBuilding._id);
+            console.log(objectId);
+            record.buildings.push(objectId);
+            console.log(record.buildings);
             homeContent.editHomeContent(record, record._id, (err) => {
                 callback(null, objectId);
             });

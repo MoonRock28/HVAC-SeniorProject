@@ -10,9 +10,10 @@ function parseHome(callback) {
         let buildings = [], avus = [], fans = [],
             buildArray, avuArray, fanArray, allArray = [];
 
-        if (record.buildings !== undefined) {
+        console.log(record.buildings);
+        if (record.buildings !== undefined && record.buildings.length > 0) {
             allArray.push( (allcb) => {
-                buildArray = record.buildings.map((id) => {
+                buildArray = record.buildings.map( (id) => {
                     return (cb) => {
                         serveBuilding.getBuilding(id, cb);
                     }

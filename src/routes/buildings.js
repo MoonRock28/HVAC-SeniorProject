@@ -18,7 +18,7 @@ module.exports = (app) => {
     });
 
     app.post('/saveBuilding', urlEncodedParser,(req, res) => {
-        console.log(req.body);
+        // console.log(req.body);
         Building.saveBuilding(req.body, (err, objectId) => {
             res.redirect('/building?id=' + objectId.toString());
         });

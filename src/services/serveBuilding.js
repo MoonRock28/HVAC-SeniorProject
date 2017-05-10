@@ -2,7 +2,7 @@
 const Building = require('../models/building');
 
 function newBuilding(building, callback) {
-    console.log(building );
+    console.log(building);
     let thisBuilding = new Building({
         name: building.name // ,
         // googleMapSpot: building.googleMapSpot
