@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/MoonRock28/HVAC-SeniorProject#readme",
   "dependencies": {
+    "async": "^2.3.0",
     "body-parser": "^1.17.1",
     "ejs": "^2.5.6",
+    "express": "^4.15.2",
     "mongoose": "^4.8.3"
   },
   "devDependencies": {

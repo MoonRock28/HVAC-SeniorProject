@@ -5,7 +5,7 @@
     </head>
     <body>
         <div id="header">
-            <p>Placeholder for BYU-I logo</p>
+            <img src=""/>
             <h1>HVAC Stewardship Manager</h1>
             <h1>Home</h1>
         </div>
@@ -31,26 +31,26 @@
             <% });%>
             </div>
             <div id="avus">
-            <% for(let i = 0; i < 10; i++) {%>
+            <% if (avus[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
                 <div class="avu">
-                    <a href="/avu?id=<% avu[i]._id.toString()%>">
-                        <p><%= avu[i].name%></p>
-                        <p><%= avu[i].nextDateToCheck%></p>
-                        <p><%= avu[i].statusColor%></p>
+                    <a href="/avu?id=<% avus[i]._id.toString()%>">
+                        <p><%= avus[i].name%></p>
+                        <p><%= avus[i].nextDateToCheck%></p>
+                        <p><%= avus[i].statusColor%></p>
                     </a>
                 </div>
-            <%}%>
+            <%}}%>
             </div>
             <div id="fans">
-            <% for(let i = 0; i < 10; i++) {%>
+            <% if (fans[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
                 <div class="fan">
-                    <a href="/fan?id=<% fan[i]._id.toString()%>">
-                        <p><%= fan[i].name%></p>
-                        <p><%= fan[i].nextDateToCheck%></p>
-                        <p><%= fan[i].statusColor%></p>
+                    <a href="/fan?id=<% fans[i]._id.toString()%>">
+                        <p><%= fans[i].name%></p>
+                        <p><%= fans[i].nextDateToCheck%></p>
+                        <p><%= fans[i].statusColor%></p>
                     </a>
                 </div>
-            <%}%>
+            <%}}%>
             </div>
 
         </div>

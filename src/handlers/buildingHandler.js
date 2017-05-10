@@ -4,14 +4,13 @@ const homeContent = require('../services/serveHomeContent');
 
 function saveBuilding(body, callback){
     let newBuilding = {
-        name: body.buildingName
+        name: body.name
     };
-    let homeObjectId = body.homeObjectId;
 
     buildingService.newBuilding(newBuilding, (err, objectId) => {
-        homeContent.getHomeContent(homeObjectId, (err, record) => {
-            record.buildings.push(newBuilding);
-            homeContent.editHomeContent(record, homeObjectId, (err) => {
+        homeContent.getHomeContent( (err, record) => {
+            record.buildings.push(newBuilding._id);
+            homeContent.editHomeContent(record, record._id, (err) => {
                 callback(null, objectId);
             });
         });
