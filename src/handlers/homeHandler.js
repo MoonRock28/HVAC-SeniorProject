@@ -1,6 +1,7 @@
 'use strict';
 const serveHome = require('../services/serveHomeContent');
 const serveBuilding = require('../services/serveBuilding');
+const Building = require('./buildingHandler');
 const serveAvu = require('../services/serveAvu');
 const serveFan = require('../services/serveFan');
 const parallel = require('async').parallel;
@@ -21,6 +22,11 @@ function parseHome(callback) {
 
                 parallel(buildArray, (err, results) => {
                     // sort the array based on highest number of numBlacks.
+                    results.forEach( (building) => {
+                        Building.updateColorNums(building._id, (err) => {
+                            if (err) console.error(err);
+                        });
+                    });
                     results.sort(compareNumBlack);
 
                     // save the sorted array to buildings[]

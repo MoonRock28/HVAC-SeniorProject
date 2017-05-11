@@ -7,7 +7,7 @@ const avuService = require('../services/serveAvu');
 module.exports = (app) => {
     app.get('/avu', (req, res) => {
         avuService.getAVU(req.query.id, (err, record) => {
-            res.render('avu', record);
+            res.render('avu', {avu: record, building: {name: req.query.buildingName, id: req.query.buildingId}});
         });
     });
 
@@ -18,10 +18,15 @@ module.exports = (app) => {
         res.render('newAvu', {id: req.query.id, buildingName: req.query.buildingName, });
     });
 
+    app.get('/deleteAvu', (req, res) => {
+        console.log(req.query.id);
+        avuHandler.deleteAVU()
+    });
+
     app.post('/saveAvu', urlEncodedParser, (req, res) => {
         console.log(req.body);
-        avuHandler.saveAVU(req.body, (err, objectId) => {
-            res.redirect('/avu?id=' + objectId);
+        avuHandler.saveAVU(req.body, (err, info) => {
+            res.redirect(`/avu?id=${info.id}&buildingName=${info.building.name}&buildingId=${info.building.id}`);
         });
     });
 
@@ -29,4 +34,8 @@ module.exports = (app) => {
         console.log('this is the editAvu route that reroutes to /avu');
         res.render('avu'/*, {avuContent} */);
     });
+
+    app.post('/addFilter', (req, res) => {
+
+    })
 };

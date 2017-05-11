@@ -7,15 +7,15 @@
         <div id="header">
             <img src=""/>
             <h1>HVAC Stewardship Manager</h1>
-            <h1>Air Ventilation Unit: <%= name%></h1>
+            <h1>Air Ventilation Unit: <%= avu.name%></h1>
         </div>
         <div id="nav">
             <% include partials/nav.ejs %>
         </div>
         <div id="content">
             <div id="details">
-                <p>Next Date To Check: <%= nextDateToCheck%></p>
-                <p>Status Color: <%= statusColor%></p>
+                <p>Next Date To Check: <%= avu.nextDateToCheck%></p>
+                <p>Status Color: <%= avu.statusColor%></p>
                 <div id="pFilters">
 
                 </div>
@@ -25,11 +25,27 @@
                 <div id="eFilters">
 
                 </div>
-                <p>Last Date Maintained: <%= lastDateMaintained%></p>
-                <p>Additional Notes: <%= additionalNotes%></p>
+                <p>Last Date Maintained: <%= avu.lastDateMaintained%></p>
+                <p>Additional Notes: <%= avu.additionalNotes%></p>
             </div>
             <div id="map">
 
+            </div>
+            <div id="addFilters">
+                <form action="/addFilter">
+                    <h4>Add Filter</h4>
+                    <p>Filter Type: <select name="type">
+                            <option value="primary">Primary</option>
+                            <option value="secondary">Secondary</option>
+                            <option value="extra">Extra(clean ones nearby)</option>
+                        </select></p>
+                    <p>Width: <br><input type="number" name="width"/></p>
+                    <p>Height:<br><input type="number" name="height"/></p>
+                    <p>Depth: <br><input type="number" name="depth"/></p>
+                    <p>Amount:<br><input type="number" name="amount"/></p>
+                    <input type="hidden" name="id" value="<%= avu._id%>"/>
+                    <input type="submit" value="Add Filter"/>
+                </form>
             </div>
         </div>
         <div id="footer">

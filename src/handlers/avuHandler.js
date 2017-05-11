@@ -1,12 +1,13 @@
 'use strict';
 const buildingService = require('../services/serveBuilding');
+const Building = require('./buildingHandler');
 const homeContent = require('../services/serveHomeContent');
 const avuService = require('../services/serveAvu');
 const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
 function saveAVU(body, callback) {
-    let functionArray = [];
+    let functionArray = [], name, buildingId;
     let lastDate = new Date();
     let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
     let newAvu = {
@@ -28,20 +29,34 @@ function saveAVU(body, callback) {
         });
         functionArray.push( (cb) => {
             buildingService.getBuilding(body.buildingId, (err, buildingRecord) => {
+                name = buildingRecord.name;
+                buildingId = buildingRecord._id;
                 buildingRecord.AVUs.push(objectId);
                 buildingService.editBuilding(buildingRecord, buildingRecord._id, (err) => {
-                    cb(null, objectId);
+                    Building.updateColorNums(buildingRecord._id, (err) => {
+                        cb(null, objectId);
+                    });
                 });
             });
         });
 
         parallel(functionArray, (err, results) => {
             if(err) console.error(err);
-            callback(null, objectId);
+            callback(null, {id: objectId, building: {name: name, id: buildingId}});
         });
     });
 }
 
+function deleteAVU(objectId, callback) {
+
+}
+
+function getAvuInfo(objectId, callback) {
+
+}
+
 module.exports = {
-    saveAVU: saveAVU
+    saveAVU: saveAVU,
+    deleteAVU: deleteAVU,
+    getAvuInfo: getAvuInfo
 };
