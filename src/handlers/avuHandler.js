@@ -3,6 +3,7 @@ const buildingService = require('../services/serveBuilding');
 const Building = require('./buildingHandler');
 const homeContent = require('../services/serveHomeContent');
 const avuService = require('../services/serveAvu');
+const filterService = require('../services/serveFilter');
 const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
@@ -52,7 +53,74 @@ function deleteAVU(objectId, callback) {
 }
 
 function getAvuInfo(objectId, callback) {
+    avuService.getAVU(objectId, (err, avuRecord) => {
+        let primaries = [],
+            secondaries = [],
+            extras = [],
+            allArray = [],
+            primary = avuRecord.primaryFilters,
+            secondary = avuRecord.secondaryFilters,
+            extra = avuRecord.extraFilters;
 
+        allArray.push( (allcb) => {
+            let functionArray = primary.map( (id) => {
+                return (cb) => {
+                    filterService.getFilter(id, cb);
+                }
+            });
+
+            parallel(functionArray, (err, results) => {
+                if (err) console.error(err);
+
+                results.forEach( (filter) => {
+                    primaries.push(filter);
+                });
+
+                allcb();
+            });
+        });
+
+        allArray.push( (allcb) => {
+            let functionArray = secondary.map( (id) => {
+                return (cb) => {
+                    filterService.getFilter(id, cb);
+                }
+            });
+
+            parallel(functionArray, (err, results) => {
+                if (err) console.error(err);
+
+                results.forEach( (filter) => {
+                    secondaries.push(filter);
+                });
+
+                allcb();
+            });
+        });
+
+        allArray.push( (allcb) => {
+            let functionArray = extra.map( (id) => {
+                return (cb) => {
+                    filterService.getFilter(id, cb);
+                }
+            });
+
+            parallel(functionArray, (err, results) => {
+                if (err) console.error(err);
+
+                results.forEach( (filter) => {
+                    extras.push(filter);
+                });
+
+                allcb();
+            });
+        });
+
+        parallel(allArray, (err) => {
+            if(err) console.error(err);
+            callback(null, {avuRecord});
+        });
+    });
 }
 
 module.exports = {

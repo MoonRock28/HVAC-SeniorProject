@@ -32,7 +32,7 @@
 
             </div>
             <div id="addFilters">
-                <form action="/addFilter">
+                <form action="/addFilter" method="post">
                     <h4>Add Filter</h4>
                     <p>Filter Type: <select name="type">
                             <option value="primary">Primary</option>
@@ -44,6 +44,8 @@
                     <p>Depth: <br><input type="number" name="depth"/></p>
                     <p>Amount:<br><input type="number" name="amount"/></p>
                     <input type="hidden" name="id" value="<%= avu._id%>"/>
+                    <input type="hidden" name="buildingId" valud="<%= building.id%>"/>
+                    <input type="hidden" name="buildingName" valud="<%= building.name%>"/>
                     <input type="submit" value="Add Filter"/>
                 </form>
             </div>

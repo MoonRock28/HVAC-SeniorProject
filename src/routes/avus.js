@@ -2,11 +2,12 @@
 const bodyParser = require('body-parser');
 const urlEncodedParser = bodyParser.urlencoded({ extended: false});
 const avuHandler = require('../handlers/avuHandler');
+const filterHandler = require('../handlers/filterHandler');
 const avuService = require('../services/serveAvu');
 
 module.exports = (app) => {
     app.get('/avu', (req, res) => {
-        avuService.getAVU(req.query.id, (err, record) => {
+        avuHandler.getAvuInfo(req.query.id, (err, record) => {
             res.render('avu', {avu: record, building: {name: req.query.buildingName, id: req.query.buildingId}});
         });
     });
@@ -35,7 +36,9 @@ module.exports = (app) => {
         res.render('avu'/*, {avuContent} */);
     });
 
-    app.post('/addFilter', (req, res) => {
-
-    })
+    app.post('/addFilter', urlEncodedParser, (req, res) => {
+        filterHandler.addFilter(req.body, req.body.id, (err, avuId) => {
+            res.redirect(`/avu?id=${avuId}&buildingName=${req.body.buildingName}&buildingId=${req.body.buildingId}`);
+        });
+    });
 };
