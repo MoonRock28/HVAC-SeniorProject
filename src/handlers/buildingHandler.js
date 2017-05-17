@@ -1,4 +1,5 @@
 'use strict';
+const handleAvu = require('./avuHandler');
 const buildingService = require('../services/serveBuilding');
 const homeContent = require('../services/serveHomeContent');
 const serveAvu = require('../services/serveAvu');
@@ -104,8 +105,44 @@ function updateColorNums (objectId, callback) {
     });
 }
 
+function removeBuilding (buildingId, callback) {
+    buildingService.getBuilding(buildingId, (err, buildingRecord) => {
+        let functionArray = [];
+
+        buildingRecord.AVUs.forEach( (avuId) => {
+            functionArray.push( (cb) => {
+                return handleAvu.deleteAVU(avuId, cb);
+            });
+        });
+
+        // buildingRecord.fans.forEach( (fanId) => {
+        //     functionArray.push( (cb) => {
+        //         return handleFan.deleteFan(fanId, buildingId, cb);
+        //     });
+        // });
+
+        parallel(functionArray, (err, results) => {
+            buildingService.deleteBuilding(buildingId, callback);
+        });
+    });
+}
+
+function removeAvuFromList (buildingId, avuId, callback) {
+    buildingService.getBuilding(buildingId, (err, buildingRecord) => {
+        let avuIndex = buildingRecord.AVUs.indexOf(avuId);
+        if(avuIndex > -1) {
+            buildingRecord.AVUs.splice(avuIndex, 1);
+        }
+        buildingService.editBuilding(buildingRecord, buildingId, (err, result) => {
+            updateColorNums(buildingId, callback);
+        });
+    });
+}
+
 module.exports = {
     saveBuilding: saveBuilding,
     getBuildingInfo: getBuildingInfo,
-    updateColorNums: updateColorNums
+    updateColorNums: updateColorNums,
+    removeBuilding: removeBuilding,
+    removeAvuFromList: removeAvuFromList
 };

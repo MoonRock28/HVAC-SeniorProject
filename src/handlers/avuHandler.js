@@ -1,6 +1,5 @@
 'use strict';
 const buildingService = require('../services/serveBuilding');
-const Building = require('./buildingHandler');
 const homeContent = require('../services/serveHomeContent');
 const avuService = require('../services/serveAvu');
 const filterService = require('../services/serveFilter');
@@ -33,11 +32,7 @@ function saveAVU(body, callback) {
                 name = buildingRecord.name;
                 buildingId = buildingRecord._id;
                 buildingRecord.AVUs.push(objectId);
-                buildingService.editBuilding(buildingRecord, buildingRecord._id, (err) => {
-                    Building.updateColorNums(buildingRecord._id, (err) => {
-                        cb(null, objectId);
-                    });
-                });
+                buildingService.editBuilding(buildingRecord, buildingRecord._id, cb);
             });
         });
 
@@ -48,7 +43,33 @@ function saveAVU(body, callback) {
     });
 }
 
-function deleteAVU(objectId, callback) {
+function deleteAVU(avuId, callback) {
+
+        // if (err) console.error("Error in deleteAVU/Building.removeAvuFromList" + err);
+    avuService.getAVU(avuId, (err, avuRecord) => {
+        let functionArray = [];
+
+        avuRecord.primaryFilters.forEach( (filterId) => {
+            functionArray.push( (cb) => {
+                return filterService.deleteFilter(filterId, cb);
+            });
+        });
+        avuRecord.secondaryFilters.forEach( (filterId) => {
+            functionArray.push( (cb) => {
+                return filterService.deleteFilter(filterId, cb);
+            });
+        });
+        avuRecord.extraFilters.forEach( (filterId) => {
+            functionArray.push( (cb) => {
+                return filterService.deleteFilter(filterId, cb);
+            });
+        });
+
+        parallel(functionArray, (err, results) => {
+            if(err) console.error("Error in deleting Filters...\n" + err);
+            avuService.deleteAVU(avuId, callback);
+        });
+    });
 
 }
 
@@ -118,7 +139,7 @@ function getAvuInfo(objectId, callback) {
 
         parallel(allArray, (err) => {
             if(err) console.error(err);
-            callback(null, {avuRecord});
+            callback(null, {current: avuRecord, primary: primaries, secondary: secondaries, extra: extras});
         });
     });
 }

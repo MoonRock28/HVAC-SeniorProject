@@ -1,7 +1,7 @@
 'use strict';
+const handleBuilding = require('./buildingHandler');
 const serveHome = require('../services/serveHomeContent');
 const serveBuilding = require('../services/serveBuilding');
-const Building = require('./buildingHandler');
 const serveAvu = require('../services/serveAvu');
 const serveFan = require('../services/serveFan');
 const parallel = require('async').parallel;
@@ -23,10 +23,13 @@ function parseHome(callback) {
                 parallel(buildArray, (err, results) => {
                     // sort the array based on highest number of numBlacks.
                     results.forEach( (building) => {
-                        Building.updateColorNums(building._id, (err) => {
+                        // console.log(building);
+                        handleBuilding.updateColorNums(building._id, (err, objectId) => {
                             if (err) console.error(err);
                         });
                     });
+                    // console.log(handleBuilding);
+
                     results.sort(compareNumBlack);
 
                     // save the sorted array to buildings[]
@@ -102,6 +105,29 @@ function parseHome(callback) {
     });
 }
 
+function removeBuildingFromList(buildingId, callback) {
+    serveHome.getHomeContent( (err, homeRecord) => {
+        let index = homeRecord.buildings.indexOf(buildingId);
+        if (index > -1) {
+            homeRecord.buildings.splice(index, 1);
+        }
+        serveHome.editHomeContent(homeRecord, homeRecord._id, (err) => {
+            if (err) console.error("Error in removing building from homeRecord" + err);
+            callback(null);
+        });
+
+    });
+}
+
+function removeAvuFromList() {
+
+}
+
+function removeFanFromList() {
+
+}
+
 module.exports = {
-    parseHome: parseHome
+    parseHome: parseHome,
+    removeBuildingFromList: removeBuildingFromList,
 };

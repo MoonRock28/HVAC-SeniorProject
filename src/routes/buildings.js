@@ -2,7 +2,8 @@
 const bodyParser = require('body-parser');
 const urlEncodedParser = bodyParser.urlencoded({ extended: false});
 const Building = require('../handlers/buildingHandler');
-const serveBuilding = require('../services/serveBuilding');
+const handleHome = require('../handlers/homeHandler');
+// const serveBuilding = require('../services/serveBuilding');
 
 module.exports = (app) => {
 
@@ -32,5 +33,15 @@ module.exports = (app) => {
     app.post('/editBuilding/:id', (req, res) => {
         console.log('this is the editBuilding route that reroutes to /building');
         res.render('building'/*, {buildingContent} */);
+    });
+
+    app.get('/removeBuilding', (req, res) => {
+        Building.removeBuilding(req.query.buildingId, (err) => {
+            if (err) console.error("Error in removing building...\n" + err);
+            handleHome.removeBuildingFromList(req.query.buildingId, (err) => {
+                if (err) console.error("Error in removing building from homeContent...\n" + err);
+                res.redirect('/home');
+            });
+        });
     });
 };

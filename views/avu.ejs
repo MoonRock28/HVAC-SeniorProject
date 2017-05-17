@@ -7,26 +7,55 @@
         <div id="header">
             <img src=""/>
             <h1>HVAC Stewardship Manager</h1>
-            <h1>Air Ventilation Unit: <%= avu.name%></h1>
+            <h1>Air Ventilation Unit: <%= avu.current.name%> in <%= building.name%></h1>
         </div>
         <div id="nav">
-            <% include partials/nav.ejs %>
         </div>
         <div id="content">
             <div id="details">
-                <p>Next Date To Check: <%= avu.nextDateToCheck%></p>
-                <p>Status Color: <%= avu.statusColor%></p>
+                <p>Next Date To Check: <%= avu.current.nextDateToCheck%></p>
+                <p>Status Color: <%= avu.current.statusColor%></p>
                 <div id="pFilters">
-
+                    <h3>Primary Filters:</h3>
+                    <% avu.primary.forEach( (filter) => {%>
+                    <div class="filter">
+                        <p>Width: <%= filter.width%><br>
+                            Height: <%= filter.height%><br>
+                            Depth: <%= filter.depth%><br>
+                            Amount: <%= filter.amount%><br>
+                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= avu.current._id%>&buildingname=<%= building.name%>&buildingId=<%= building.id%>">Remove Filter</a>
+                        </p>
+                    </div>
+                    <%});%>
                 </div>
                 <div id="sFilters">
-
+                    <h3>Secondary Filters:</h3>
+                    <% avu.secondary.forEach( (filter) => {%>
+                    <div class="filter">
+                        <p>Width: <%= filter.width%><br>
+                            Height: <%= filter.height%><br>
+                            Depth: <%= filter.depth%><br>
+                            Amount: <%= filter.amount%><br>
+                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= avu.current._id%>&buildingname=<%= building.name%>&buildingId=<%= building.id%>">Remove Filter</a>
+                        </p>
+                    </div>
+                    <%});%>
                 </div>
                 <div id="eFilters">
-
+                    <h3>Extra Filters:</h3>
+                    <% avu.extra.forEach( (filter) => {%>
+                    <div class="filter">
+                        <p>Width: <%= filter.width%><br>
+                            Height: <%= filter.height%><br>
+                            Depth: <%= filter.depth%><br>
+                            Amount: <%= filter.amount%><br>
+                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= avu.current._id%>&buildingname=<%= building.name%>&buildingId=<%= building.id%>">Remove Filter</a>
+                        </p>
+                    </div>
+                    <%});%>
                 </div>
-                <p>Last Date Maintained: <%= avu.lastDateMaintained%></p>
-                <p>Additional Notes: <%= avu.additionalNotes%></p>
+                <p>Last Date Maintained: <%= avu.current.lastDateMaintained%></p>
+                <p>Additional Notes: <%= avu.current.additionalNotes%></p>
             </div>
             <div id="map">
 
@@ -43,15 +72,15 @@
                     <p>Height:<br><input type="number" name="height"/></p>
                     <p>Depth: <br><input type="number" name="depth"/></p>
                     <p>Amount:<br><input type="number" name="amount"/></p>
-                    <input type="hidden" name="id" value="<%= avu._id%>"/>
-                    <input type="hidden" name="buildingId" valud="<%= building.id%>"/>
-                    <input type="hidden" name="buildingName" valud="<%= building.name%>"/>
+                    <input type="hidden" name="id" value="<%= avu.current._id%>"/>
+                    <input type="hidden" name="buildingId" value="<%= building.id%>"/>
+                    <input type="hidden" name="buildingName" value="<%= building.name%>"/>
                     <input type="submit" value="Add Filter"/>
                 </form>
             </div>
         </div>
         <div id="footer">
-
+            <p><a href="/deleteAvu?avuId=<%= avu.current._id%>&buildingId=<%= building.id%>">Remove <%= avu.current.name%></a></p>
         </div>
     </body>
 </html>

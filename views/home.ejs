@@ -33,7 +33,7 @@
             <div id="avus">
             <% if (avus[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
                 <div class="avu">
-                    <a href="/avu?id=<% avus[i]._id.toString()%>">
+                    <a href=`/avu?id=<%= avus[i]._id.toString()%>`>
                         <p><%= avus[i].name%></p>
                         <p><%= avus[i].nextDateToCheck%></p>
                         <p><%= avus[i].statusColor%></p>
@@ -44,7 +44,7 @@
             <div id="fans">
             <% if (fans[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
                 <div class="fan">
-                    <a href="/fan?id=<% fans[i]._id.toString()%>">
+                    <a href="/fan?id=<%= fans[i]._id.toString()%>">
                         <p><%= fans[i].name%></p>
                         <p><%= fans[i].nextDateToCheck%></p>
                         <p><%= fans[i].statusColor%></p>

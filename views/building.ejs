@@ -26,21 +26,23 @@
 
             </div>
             <div id="avus">
+                <h3>Air Ventilation Units:</h3>
                 <% avus.forEach( (avu) => {%>
-                    <a href="/avu?id=<%= avu._id%>&buildingName=<%= building.name%>&buildingId=<%= building._id%>">
-                        <h4><%= avu.name%></h4>
-                        <p>Status color: <%= avu.statusColor%></p>
-                        <p>Next date to check: <%= avu.nextDateToCheck%></p>
+                    <a href="/avu?id=<%= avu._id%>&buildingName=<%= building.name%>&buildingId=<%= building._id.toString()%>">
+                        <p><%= avu.name%><br>
+                        Status color: <%= avu.statusColor%><br>
+                        Next date to check: <%= avu.nextDateToCheck%><br>
+                        </p>
                     </a>
                 <%})%>
             </div>
             <div id="fans">
-
+                <h3>Fans:</h3>
             </div>
 
         </div>
         <div id="footer">
-
+            <p><a href="/removeBuilding?buildingId=<%= building.id%>">Remove <%= building.name%></a></p>
         </div>
     </body>
 </html>
