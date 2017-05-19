@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 
 const AVUSchema = new Schema({
     name: String,
-    location: { type: Schema.Types.ObjectId, ref: 'ItemLocation'},
+    // googleMapSpot: {type: Schema.Types.ObjectId, ref: 'GoogleMap'},
+    buildingName: String,
+    buildingId: {type: Schema.Types.ObjectId, ref: 'Building'},
+    floor: String,
+    mechanicalRoom: String,
     primaryFilters: [{ type: Schema.Types.ObjectId, ref: 'Filter'}],
     secondaryFilters: [{ type: Schema.Types.ObjectId, ref: 'Filter'}],
     extraFilters: [{ type: Schema.Types.ObjectId, ref: 'Filter'}],

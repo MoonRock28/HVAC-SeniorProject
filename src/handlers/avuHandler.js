@@ -7,11 +7,16 @@ const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
 function saveAVU(body, callback) {
-    let functionArray = [], name, buildingId;
+    let functionArray = [];
     let lastDate = new Date();
     let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
     let newAvu = {
         name: body.name,
+        // googleMapSpot: body.googleMapSpot,
+        buildingName: body.buildingName,
+        buildingId: body.buildingId,
+        floor: body.floor,
+        mechanicalRoom: body.mechanicalRoom,
         nextDateToCheck: body.nextDateToCheck,
         lastDateMaintained: lastDate,
         statusColor: statusColor,
@@ -29,8 +34,6 @@ function saveAVU(body, callback) {
         });
         functionArray.push( (cb) => {
             buildingService.getBuilding(body.buildingId, (err, buildingRecord) => {
-                name = buildingRecord.name;
-                buildingId = buildingRecord._id;
                 buildingRecord.AVUs.push(objectId);
                 buildingService.editBuilding(buildingRecord, buildingRecord._id, cb);
             });
@@ -38,32 +41,38 @@ function saveAVU(body, callback) {
 
         parallel(functionArray, (err, results) => {
             if(err) console.error(err);
-            callback(null, {id: objectId, building: {name: name, id: buildingId}});
+            callback(null, {id: objectId, building: {name: body.buildingName, id: body.buildingId}});
         });
     });
 }
 
 function deleteAVU(avuId, callback) {
-
-        // if (err) console.error("Error in deleteAVU/Building.removeAvuFromList" + err);
     avuService.getAVU(avuId, (err, avuRecord) => {
         let functionArray = [];
 
-        avuRecord.primaryFilters.forEach( (filterId) => {
-            functionArray.push( (cb) => {
-                return filterService.deleteFilter(filterId, cb);
+        // functionArray.push( (cb) => { return serveMap.delete}); not finished yet...
+
+        if (avuRecord.primaryFilters !== null) {
+            avuRecord.primaryFilters.forEach((filterId) => {
+                functionArray.push((cb) => {
+                    return filterService.deleteFilter(filterId, cb);
+                });
             });
-        });
-        avuRecord.secondaryFilters.forEach( (filterId) => {
-            functionArray.push( (cb) => {
-                return filterService.deleteFilter(filterId, cb);
+        }
+        if (avuRecord.secondaryFilters !== null) {
+            avuRecord.secondaryFilters.forEach((filterId) => {
+                functionArray.push((cb) => {
+                    return filterService.deleteFilter(filterId, cb);
+                });
             });
-        });
-        avuRecord.extraFilters.forEach( (filterId) => {
-            functionArray.push( (cb) => {
-                return filterService.deleteFilter(filterId, cb);
+        }
+        if (avuRecord.extraFilters !== null) {
+            avuRecord.extraFilters.forEach((filterId) => {
+                functionArray.push((cb) => {
+                    return filterService.deleteFilter(filterId, cb);
+                });
             });
-        });
+        }
 
         parallel(functionArray, (err, results) => {
             if(err) console.error("Error in deleting Filters...\n" + err);
@@ -144,8 +153,19 @@ function getAvuInfo(objectId, callback) {
     });
 }
 
+function quickUpdate(nextDate, avuId, callback) {
+    avuService.getAVU(avuId, (err, record) => {
+        record.nextDateToCheck = nextDate;
+        record.lastDateMaintained = new Date();
+        record.statusColor = colorService.getStatusColor(nextDate, record.lastDateMaintained);
+        console.log("statusColor updated to " + record.statusColor);
+        avuService.editAVU(record, avuId, callback);
+    })
+}
+
 module.exports = {
     saveAVU: saveAVU,
     deleteAVU: deleteAVU,
-    getAvuInfo: getAvuInfo
+    getAvuInfo: getAvuInfo,
+    quickUpdate: quickUpdate
 };

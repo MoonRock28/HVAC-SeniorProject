@@ -11,7 +11,7 @@ function getHomeContent(callback) {
 
 function editHomeContent(home, objectId, callback) {
     Home.findOne({_id: objectId}).then( (record) => {
-        console.log(home);
+        // console.log(home);
         record.buildings = home.buildings;
         record.allAvus = home.allAvus;
         record.allFans = home.allFans;

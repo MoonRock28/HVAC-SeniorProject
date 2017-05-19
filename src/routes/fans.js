@@ -1,7 +1,14 @@
 'use strict';
+const handleFan = require('../handlers/fanHandler');
+const handleBelt = require('../handlers/beltHandler');
+const handleBuilding = require('../handlers/buildingHandler');
+const serveFan = require('../services/serveFan');
+const serveBelt = require('../services/serveBelt');
+
 
 module.exports = (app) => {
-    app.get('/fan/:id', (req, res) => {
+    app.get('/fan/', (req, res) => {
+
         res.render('fan'/*, {fanContent}*/);
     });
 

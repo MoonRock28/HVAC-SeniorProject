@@ -12,7 +12,7 @@
         <div id="nav">
             <ul>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/createAvu?buildingName=<%= building.name%>&id=<%= building._id.toString()%>">New AVU</a></li>
+                <li><a href="/createAvu?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New AVU</a></li>
                 <li><a href="/createFan">New Fan</a></li>
 
             </ul>
@@ -28,10 +28,10 @@
             <div id="avus">
                 <h3>Air Ventilation Units:</h3>
                 <% avus.forEach( (avu) => {%>
-                    <a href="/avu?id=<%= avu._id%>&buildingName=<%= building.name%>&buildingId=<%= building._id.toString()%>">
+                    <a href="/avu?id=<%= avu._id%>">
                         <p><%= avu.name%><br>
                         Status color: <%= avu.statusColor%><br>
-                        Next date to check: <%= avu.nextDateToCheck%><br>
+                        Next date to check: <%= avu.nextDateToCheck.toDateString()%><br>
                         </p>
                     </a>
                 <%})%>

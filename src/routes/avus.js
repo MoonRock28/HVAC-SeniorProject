@@ -10,15 +10,15 @@ module.exports = (app) => {
     app.get('/avu', (req, res) => {
         avuHandler.getAvuInfo(req.query.id, (err, record) => {
             // console.log(record);
-            res.render('avu', {avu: record, building: {name: req.query.buildingName, id: req.query.buildingId}});
+            res.render('avu', record);
         });
     });
 
     app.get('/createAvu', (req, res) => {
-        console.log(req.query.id);
+        console.log(req.query.buildingId);
         console.log(req.query.buildingName);
 
-        res.render('newAvu', {id: req.query.id, buildingName: req.query.buildingName, });
+        res.render('newAvu', {buildingId: req.query.buildingId, buildingName: req.query.buildingName, });
     });
 
     app.get('/deleteAvu', (req, res) => {
@@ -35,11 +35,19 @@ module.exports = (app) => {
     });
 
     app.post('/saveAvu', urlEncodedParser, (req, res) => {
-        console.log(req.body);
+        // console.log(req.body);
         avuHandler.saveAVU(req.body, (err, info) => {
             handleBuilding.updateColorNums(info.building.id, (err, result) => {
-                res.redirect(`/avu?id=${info.id}&buildingName=${info.building.name}&buildingId=${info.building.id}`);
+                res.redirect(`/avu?id=${info.id}`);
             });
+        });
+    });
+
+    app.post('/updateAvu', urlEncodedParser, (req, res) => {
+        // console.log(req.body);
+        avuHandler.quickUpdate(req.body.nextDateToCheck, req.body.avuId, (err) => {
+            if (err) console.error('Error in avu quickUpdate...\n' + err);
+            res.redirect(`/avu?id=${req.body.avuId}`);
         });
     });
 
@@ -50,13 +58,13 @@ module.exports = (app) => {
 
     app.post('/addFilter', urlEncodedParser, (req, res) => {
         filterHandler.addFilter(req.body, req.body.id, (err, avuId) => {
-            res.redirect(`/avu?id=${avuId}&buildingName=${req.body.buildingName}&buildingId=${req.body.buildingId}`);
+            res.redirect(`/avu?id=${avuId}`);
         });
     });
 
     app.get('/removeFilter', (req, res) => {
         filterHandler.removeFilter(req.query.filterId, req.query.avuId, () => {
-            res.redirect(`/avu?id=${req.query.avuId}&buildingName=${req.query.buildingName}&buildingId=${req.query.buildingId}`);
+            res.redirect(`/avu?id=${req.query.avuId}`);
         });
     });
 };

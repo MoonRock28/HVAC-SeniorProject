@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 
 const FanSchema = new Schema({
     name: String,
-    location: { type: Schema.Types.ObjectId, ref: 'ItemLocation'},
+    // googleMapSpot: {type: Schema.Types.ObjectId, ref: 'GoogleMap'},
+    buildingName: String,
+    buildingId: String,
+    floor: String,
+    mechanicalRoom: String,
     fanSheave: String,
     motorSheave: String,
     belts: [{ type: Schema.Types.ObjectId, ref: 'Belt'}],

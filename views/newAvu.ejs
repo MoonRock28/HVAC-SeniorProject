@@ -12,19 +12,24 @@
     <div id="nav">
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="/building?id=<%= id%>"><%= buildingName%></a></li>
+            <li><a href="/building?id=<%= buildingId%>"><%= buildingName%></a></li>
         </ul>
     </div>
     <div id="content">
         <form action="/saveAVU" method="post">
             <div id="details">
                 <p>Name:<br>
-                <input type="text" name="name"></p>
+                    <input type="text" name="name"></p>
+                <p>Floor:<br>
+                    <input type="text" name="floor"></p>
+                <p>Mechanical Room:<br>
+                    <input type="text" name="mechanicalRoom"></p>
                 <p>Next Date To Check:<br>
-                <input type="date" name="nextDateToCheck"></p>
+                    <input type="date" name="nextDateToCheck"></p>
                 <p>Additional Notes:<br>
-                <input type="text" name="additionalNotes"></p>
-                <input type="hidden" name="buildingId" value="<%= id%>" />
+                    <input type="text" name="additionalNotes"></p>
+                <input type="hidden" name="buildingId" value="<%= buildingId%>" />
+                <input type="hidden" name="buildingName" value="<%= buildingName%>" />
             </div>
             <div id="map">
 

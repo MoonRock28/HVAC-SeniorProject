@@ -11,7 +11,11 @@ function getFan(objectId, callback) {
 function editFan(fan, objectId, callback) {
     Fan.findOne({_id: objectId}).then( (record) => {
         record.name = fan.name;
-        record.location = fan.location;
+        // record.googleMapSpot = fan.googleMapSpot;
+        record.buildingName = fan.buildingName;
+        record.buildingId = fan.buildingId
+        record.floor = fan.floor;
+        record.mechanicalRoom = fan.mechanicalRoom;
         record.fanSheave = fan.fanSheave;
         record.motorSheave = fan.motorSheave;
         record.belts = fan.belts;
@@ -30,6 +34,8 @@ function newFan(fan, callback) {
     let thisFan = new Fan({
         name: fan.name,
         location: fan.location,
+        buildingName: fan.buildingName,
+        buildingId: fan.buildingId,
         fanSheave: fan.fanSheave,
         motorSheave: fan.motorSheave,
         nextDateToCheck: fan.nextDateToCheck,

@@ -8,15 +8,12 @@ const handleHome = require('../handlers/homeHandler');
 module.exports = (app) => {
 
     app.get('/building', (req, res) => {
-        console.log(req.query.id);
+        // console.log(req.query.id);
 
         Building.getBuildingInfo(req.query.id, (err, info) => {
             if (err) console.error(err);
             res.render('building', info);
         });
-        // serveBuilding.getBuilding(req.query.id, (err, record) => {
-        //     res.render('building', record);
-        // });
     });
 
     app.get('/createBuilding', (req, res) => {
