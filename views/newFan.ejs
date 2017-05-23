@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Fan</title>
+</head>
+<body>
+<div id="header">
+    <img src=""/>
+    <h1>HVAC Stewardship Manager</h1>
+    <h1>New Fan</h1>
+</div>
+<div id="nav">
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/building?id=<%= buildingId%>"><%= buildingName%></a></li>
+    </ul>
+</div>
+<div id="content">
+    <form action="/saveFan" method="post">
+        <div id="details">
+            <p>Name:<br>
+                <input type="text" name="name"></p>
+            <p>Floor:<br>
+                <input type="text" name="floor"></p>
+            <p>Mechanical Room:<br>
+                <input type="text" name="mechanicalRoom"></p>
+            <p>Fan Sheave:<br>
+                <input type="text" name="fanSheave"></p>
+            <p>Motor Sheave:<br>
+                <input type="text" name="motorSheave"></p>
+            <p>Next Date To Check:<br>
+                <input type="date" name="nextDateToCheck"></p>
+            <p>Additional Notes:<br>
+                <input type="text" name="additionalNotes"></p>
+            <input type="hidden" name="buildingId" value="<%= buildingId%>" />
+            <input type="hidden" name="buildingName" value="<%= buildingName%>" />
+        </div>
+        <div id="map">
+
+        </div>
+        <input type="submit" value="Save Fan"/>
+    </form>
+</div>
+
+<div id="footer">
+
+</div>
+</body>
+</html>

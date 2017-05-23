@@ -139,10 +139,23 @@ function removeAvuFromList (buildingId, avuId, callback) {
     });
 }
 
+function removeFanFromList (buildingId, fanId, callback) {
+    buildingService.getBuilding(buildingId, (err, buildingRecord) => {
+        let fanIndex = buildingRecord.fans.indexOf(fanId);
+        if(fanIndex > -1) {
+            buildingRecord.fans.splice(fanIndex, 1);
+        }
+        buildingService.editBuilding(buildingRecord, buildingId, (err, result) => {
+            updateColorNums(buildingId, callback);
+        });
+    });
+}
+
 module.exports = {
     saveBuilding: saveBuilding,
     getBuildingInfo: getBuildingInfo,
     updateColorNums: updateColorNums,
     removeBuilding: removeBuilding,
-    removeAvuFromList: removeAvuFromList
+    removeAvuFromList: removeAvuFromList,
+    removeFanFromList: removeFanFromList
 };

@@ -11,7 +11,7 @@ function parseHome(callback) {
         let buildings = [], avus = [], fans = [],
             buildArray, avuArray, fanArray, allArray = [];
 
-        console.log(record.buildings);
+        // console.log(record.buildings);
         if (record.buildings !== undefined && record.buildings.length > 0) {
             allArray.push( (allcb) => {
                 buildArray = record.buildings.map( (id) => {
@@ -42,17 +42,22 @@ function parseHome(callback) {
             })
         }
 
-        if (record.avus !== undefined) {
+        // console.log(record.allAvus);
+        if (record.allAvus !== undefined) {
+            // console.log('getting AVUs for home content...');
             allArray.push( (allcb) => {
-                    avuArray = record.avus.map((id) => {
+                    avuArray = record.allAvus.map( (id) => {
                         return (cb) => {
+                            // console.log(id);
                             serveAvu.getAVU(id, cb);
                         }
                     });
 
                     parallel(avuArray, (err, results) => {
                         // sort the array based on avu.nextDateToCheck value
-                        results.sort(compareDate);
+                        // if (results.length > 1)
+                        //     results.sort(compareDate);
+
                         // save the sorted array to avus[]
                         results.forEach((result) => {
                             avus.push(result);
@@ -62,18 +67,21 @@ function parseHome(callback) {
                 })
         }
 
-        if (record.fans !== undefined) {
+        if (record.allFans !== undefined) {
+            // console.log('getting fans for home content...');
             allArray.push(
                 (allcb) => {
-                    fanArray = record.fans.map((id) => {
+                    fanArray = record.allFans.map( (id) => {
                         return (cb) => {
+                            // console.log(id);
                             serveFan.getFan(id, cb);
                         }
                     });
 
                     parallel(fanArray, (err, results) => {
                         // sort the array based on fan.nextDateToCheck value
-                        results.sort(compareDate);
+                        // if (results.length > 1)
+                        //     results.sort(compareDate);
                         // save the sorted array to fans[]
                         results.forEach((result) => {
                             fans.push(result);
@@ -100,6 +108,8 @@ function parseHome(callback) {
         }
 
         parallel(allArray, (err, result) => {
+            // console.log(avus);
+            // console.log(fans);
             callback(null, {buildings: buildings, avus: avus, fans: fans});
         });
     });
@@ -119,15 +129,29 @@ function removeBuildingFromList(buildingId, callback) {
     });
 }
 
-function removeAvuFromList() {
-
+function removeAvuFromList(avuId, callback) {
+    serveHome.getHomeContent((err, homeContent) => {
+        let avuIndex = homeContent.allAvus.indexOf(avuId);
+        if (avuIndex > -1) {
+            homeContent.allAvus.splice(avuIndex, 1);
+        }
+        serveHome.editHomeContent(homeContent, homeContent._id, callback);
+    });
 }
 
-function removeFanFromList() {
-
+function removeFanFromList(fanId, callback) {
+    serveHome.getHomeContent((err, homeContent) => {
+        let fanIndex = homeContent.allFans.indexOf(fanId);
+        if (fanIndex > -1) {
+            homeContent.allFans.splice(fanIndex, 1);
+        }
+        serveHome.editHomeContent(homeContent, homeContent._id, callback);
+    });
 }
 
 module.exports = {
     parseHome: parseHome,
     removeBuildingFromList: removeBuildingFromList,
+    removeAvuFromList: removeAvuFromList,
+    removeFanFromList: removeFanFromList
 };

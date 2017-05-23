@@ -11,7 +11,7 @@
         </div>
         <div id="nav">
             <ul>
-                <li><a href="/">Home</a></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/createBuilding">New Building</a></li>
             </ul>
         </div>
@@ -20,6 +20,7 @@
                 <!-- Show the buildings locations on the map -->
             </div>
             <div id="buildings">
+                <h4>Buildings:</h4>
             <% buildings.forEach( (building) => {%>
                 <div class="building">
                     <a href="/building?id=<%= building._id.toString()%>">
@@ -32,26 +33,29 @@
             <% });%>
             </div>
             <div id="avus">
-            <% if (avus[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
+                <h4>Air Ventilation Units:</h4>
+            <% avus.forEach( (avu) => {%>
                 <div class="avu">
-                    <a href=`/avu?id=<%= avus[i]._id.toString()%>`>
-                        <p><%= avus[i].name%></p>
-                        <p><%= avus[i].nextDateToCheck%></p>
-                        <p><%= avus[i].statusColor%></p>
+                    <a href="/avu?id=<%= avu._id.toString()%>">
+                        <p>Name: <%= avu.name%><br>
+                        Next Date To Check: <%= avu.nextDateToCheck.toDateString()%><br>
+                        Status Color: <%= avu.statusColor%></p>
                     </a>
                 </div>
-            <%}}%>
+            <%})%>
             </div>
             <div id="fans">
-            <% if (fans[0] !== undefined) {for(let i = 0; i < 10; i++) {%>
+                <h4>Fans:</h4>
+            <% if (fans.length < 10) {length = fans.length;} else {length = 10;}
+            for(let i = 0; i < length; i++) {%>
                 <div class="fan">
                     <a href="/fan?id=<%= fans[i]._id.toString()%>">
-                        <p><%= fans[i].name%></p>
-                        <p><%= fans[i].nextDateToCheck%></p>
-                        <p><%= fans[i].statusColor%></p>
+                        <p>Name: <%= fans[i].name%><br>
+                            Next Date To Check: <%= fans[i].nextDateToCheck.toDateString()%><br>
+                            Status Color: <%= fans[i].statusColor%></p>
                     </a>
                 </div>
-            <%}}%>
+            <%}%>
             </div>
 
         </div>

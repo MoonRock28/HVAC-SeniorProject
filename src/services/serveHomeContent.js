@@ -3,6 +3,7 @@ const Home = require('../models/homeContent');
 
 function getHomeContent(callback) {
     Home.findOne({}).then( (record) => {
+        // console.log(record);
         callback(null, record);
     }).catch((err) => {
         console.log(err);

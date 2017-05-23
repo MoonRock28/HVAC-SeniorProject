@@ -1,27 +1,80 @@
 <!DOCTYPE html>
 <html>
-    <head>
-
-    </head>
-    <body>
-        <div id="header">
-            <p>Placeholder for BYU-I logo</p>
-            <h1>HVAC Stewardship Manager</h1>
-            <h1>Fan</h1>
-        </div>
-        <div id="nav">
-            <% include partials/nav.ejs %>
-        </div>
-        <div id="content">
-            <div id="map">
-
+<head>
+    <title>Fan: <%= current.name%></title>
+</head>
+<body>
+<div id="header">
+    <img src=""/>
+    <h1>HVAC Stewardship Manager</h1>
+    <h1>Fan: <%= current.name%></h1>
+</div>
+<div id="nav">
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
+    </ul>
+</div>
+<div id="content">
+    <div id="details">
+        <p>
+            Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
+            Status Color: <%= current.statusColor%><br>
+            Fan Sheave: <%= current.fanSheave%><br>
+            Motor Sheave: <%= current.motorSheave%><br>
+            Building: <%= current.buildingName%><br>
+            Floor: <%= current.floor%><br>
+            Mechanical Room: <%= current.mechanicalRoom%><br>
+            Additional Notes: <%= current.additionalNotes%><br>
+        <form action="/updateFan" method="post">
+            <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
+            <input type="hidden" name="fanId" value="<%= current._id%>"/>
+            <input type="submit" value="<%= current.name%> maintained" />
+        </form>
+        </p>
+        <div id="reqBelts">
+            <h3>Required Belts:</h3>
+            <% belts.forEach( (belt) => {%>
+            <div class="belt">
+                <p> Type: <%= belt.type%><br>
+                    Amount: <%= belt.amount%><br>
+                    <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
+                </p>
             </div>
-            <div id="details">
-
+            <%});%>
+        </div>
+        <div id="extraBelts">
+            <h3>Extra Belts:</h3>
+            <% extras.forEach( (belt) => {%>
+            <div class="belt">
+                <p> Type: <%= belt.type%>
+                    Amount: <%= belt.amount%><br>
+                    <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
+                </p>
             </div>
+            <%});%>
         </div>
-        <div id="footer">
+        <p>Last Date Maintained: <%= current.lastDateMaintained.toDateString()%></p>
+    </div>
+    <div id="map">
 
-        </div>
-    </body>
+    </div>
+    <div id="addBelts">
+        <form action="/addBelt" method="post">
+            <h4>Add Belt</h4>
+            <p>Belt: <select name="belt">
+                    <option value="belt">Required Belt</option>
+                    <option value="extra">Extra(new ones nearby)</option>
+                </select></p>
+            <p>Type:<br><input type="text" name="type"/></p>
+            <p>Amount:<br><input type="number" name="amount"/></p>
+            <input type="hidden" name="id" value="<%= current._id%>"/>
+            <input type="submit" value="Add Belt"/>
+        </form>
+    </div>
+</div>
+<div id="footer">
+    <p><a href="/deleteFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
+</div>
+</body>
 </html>

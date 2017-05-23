@@ -4,6 +4,7 @@ const urlEncodedParser = bodyParser.urlencoded({ extended: false});
 const avuHandler = require('../handlers/avuHandler');
 const handleBuilding = require('../handlers/buildingHandler');
 const filterHandler = require('../handlers/filterHandler');
+const handleHome = require('../handlers/homeHandler');
 const avuService = require('../services/serveAvu');
 
 module.exports = (app) => {
@@ -24,13 +25,17 @@ module.exports = (app) => {
     app.get('/deleteAvu', (req, res) => {
         // console.log(req.query.id);
         avuHandler.deleteAVU(req.query.avuId, (err, result) => {
-            if (err) console.err("Error in deleteAvu...\n" + err);
+            if (err) console.error("Error in deleteAvu...\n" + err);
             handleBuilding.removeAvuFromList(req.query.buildingId, req.query.avuId, (err, result) => {
-                if (err) console.err("Error in removing AVU from building list...\n" + err);
+                if (err) console.error("Error in removing AVU from building list...\n" + err);
+                handleHome.removeAvuFromList(req.query.avuId, (err, results) => {
+                    if (err) console.error("Error in removing AVU from Home list...\n" + err);
+                    console.log(`Fan Deleted...\n`);
+                    res.redirect(`/building?id=${req.query.buildingId}`);
+                });
                 console.log(`AVU Deleted...\n`);
                 res.redirect(`/building?id=${req.query.buildingId}`);
             });
-
         });
     });
 

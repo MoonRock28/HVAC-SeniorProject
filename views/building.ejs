@@ -13,7 +13,7 @@
             <ul>
                 <li><a href="/home">Home</a></li>
                 <li><a href="/createAvu?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New AVU</a></li>
-                <li><a href="/createFan">New Fan</a></li>
+                <li><a href="/createFan?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New Fan</a></li>
 
             </ul>
         </div>
@@ -38,6 +38,14 @@
             </div>
             <div id="fans">
                 <h3>Fans:</h3>
+                <% fans.forEach( (fan) => {%>
+                <a href="/fan?id=<%= fan._id%>">
+                    <p><%= fan.name%><br>
+                        Status color: <%= fan.statusColor%><br>
+                        Next date to check: <%= fan.nextDateToCheck.toDateString()%><br>
+                    </p>
+                </a>
+                <%})%>
             </div>
 
         </div>

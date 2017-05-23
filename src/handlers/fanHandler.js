@@ -13,8 +13,12 @@ function saveFan(body, callback) {
     let newFan = {
         name: body.name,
         // googleMapSpot: body.googleMapSpot,
+        buildingName: body.buildingName,
+        buildingId: body.buildingId,
         floor: body.floor,
         mechanicalRoom: body.mechanicalRoom,
+        fanSheave: body.fanSheave,
+        motorSheave: body.motorSheave,
         nextDateToCheck: body.nextDateToCheck,
         lastDateMaintained: lastDate,
         statusColor: statusColor,
@@ -120,8 +124,19 @@ function getFanInfo(objectId, callback) {
     });
 }
 
+function quickUpdate(nextDate, fanId, callback) {
+    serveFan.getFan(fanId, (err, record) => {
+        record.nextDateToCheck = nextDate;
+        record.lastDateMaintained = new Date();
+        record.statusColor = colorService.getStatusColor(nextDate, record.lastDateMaintained);
+        console.log("statusColor updated to " + record.statusColor);
+        serveFan.editFan(record, fanId, callback);
+    })
+}
+
 module.exports = {
     saveFan: saveFan,
     deleteFan: deleteFan,
-    getFanInfo: getFanInfo
+    getFanInfo: getFanInfo,
+    quickUpdate: quickUpdate
 };

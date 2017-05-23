@@ -36,6 +36,8 @@ function newFan(fan, callback) {
         location: fan.location,
         buildingName: fan.buildingName,
         buildingId: fan.buildingId,
+        floor: fan.floor,
+        mechanicalRoom: fan.mechanicalRoom,
         fanSheave: fan.fanSheave,
         motorSheave: fan.motorSheave,
         nextDateToCheck: fan.nextDateToCheck,
