@@ -18,7 +18,11 @@ module.exports = (app) => {
     });
 
     app.get('/createFan', urlEncodedParser, (req, res) => {
-        res.render('newFan', {buildingId: req.query.buildingId, buildingName: req.query.buildingName});
+        handleBuilding.getBuildingInfo(req.query.buildingId, (err, building) => {
+            console.log(JSON.stringify(building, null, 4));
+            res.render('newFan', building);
+
+        });
     });
 
     app.post('/saveFan', urlEncodedParser, (req, res) => {

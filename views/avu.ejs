@@ -15,86 +15,87 @@
                 <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
             </ul>
         </div>
-        <div id="content">
-            <div id="details">
-                <p>
-                    Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
-                    Status Color: <%= current.statusColor%><br>
-                    Building: <%= current.buildingName%><br>
-                    Floor: <%= current.floor%><br>
-                    Mechanical Room: <%= current.mechanicalRoom%><br>
-                    Additional Notes: <%= current.additionalNotes%><br>
-                    <form action="/updateAvu" method="post">
-                        <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
-                        <input type="hidden" name="avuId" value="<%= current._id%>"/>
-                        <input type="submit" value="<%= current.name%> maintained" />
-                    </form>
-                </p>
-                <div id="pFilters">
-                    <h3>Primary Filters:</h3>
-                    <% primary.forEach( (filter) => {%>
-                    <div class="filter">
-                        <p>Width: <%= filter.width%><br>
-                            Height: <%= filter.height%><br>
-                            Depth: <%= filter.depth%><br>
-                            Amount: <%= filter.amount%><br>
-                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
-                        </p>
-                    </div>
-                    <%});%>
-                </div>
-                <div id="sFilters">
-                    <h3>Secondary Filters:</h3>
-                    <% secondary.forEach( (filter) => {%>
-                    <div class="filter">
-                        <p>Width: <%= filter.width%><br>
-                            Height: <%= filter.height%><br>
-                            Depth: <%= filter.depth%><br>
-                            Amount: <%= filter.amount%><br>
-                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
-                        </p>
-                    </div>
-                    <%});%>
-                </div>
-                <div id="eFilters">
-                    <h3>Extra Filters:</h3>
-                    <% extra.forEach( (filter) => {%>
-                    <div class="filter">
-                        <p>Width: <%= filter.width%><br>
-                            Height: <%= filter.height%><br>
-                            Depth: <%= filter.depth%><br>
-                            Amount: <%= filter.amount%><br>
-                            <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
-                        </p>
-                    </div>
-                    <%});%>
-                </div>
-                <p>Last Date Maintained: <%= current.lastDateMaintained%></p>
-            </div>
-            <div id="map">
 
-            </div>
-            <div id="quickUpdate">
-
-            </div>
-            <div id="addFilters">
-                <form action="/addFilter" method="post">
-                    <h4>Add Filter</h4>
-                    <p>Filter Type: <select name="type">
-                            <option value="primary">Primary</option>
-                            <option value="secondary">Secondary</option>
-                            <option value="extra">Extra(clean ones nearby)</option>
-                        </select></p>
-                    <p>Width: <br><input type="number" name="width"/></p>
-                    <p>Height:<br><input type="number" name="height"/></p>
-                    <p>Depth: <br><input type="number" name="depth"/></p>
-                    <p>Amount:<br><input type="number" name="amount"/></p>
-                    <input type="hidden" name="id" value="<%= current._id%>"/>
-                    <input type="submit" value="Add Filter"/>
+        <div id="details">
+            <p>
+                Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
+                Status Color: <%= current.statusColor%><br>
+                Building: <%= current.buildingName%><br>
+                Floor: <%= current.floor%><br>
+                Mechanical Room: <%= current.mechanicalRoom%><br>
+                Additional Notes: <%= current.additionalNotes%><br>
+                <form action="/quickUpdateAvu" method="post">
+                    <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
+                    <input type="hidden" name="avuId" value="<%= current._id%>"/>
+                    <input type="hidden" name="buildingId" value="<%= current.buildingId%>"/>
+                    <input type="submit" value="<%= current.name%> maintained" />
                 </form>
+            </p>
+            <div id="pFilters">
+                <h3>Primary Filters:</h3>
+                <% primary.forEach( (filter) => {%>
+                <div class="filter">
+                    <p>Width: <%= filter.width%><br>
+                        Height: <%= filter.height%><br>
+                        Depth: <%= filter.depth%><br>
+                        Amount: <%= filter.amount%><br>
+                        <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
+                    </p>
+                </div>
+                <%});%>
             </div>
+            <div id="sFilters">
+                <h3>Secondary Filters:</h3>
+                <% secondary.forEach( (filter) => {%>
+                <div class="filter">
+                    <p>Width: <%= filter.width%><br>
+                        Height: <%= filter.height%><br>
+                        Depth: <%= filter.depth%><br>
+                        Amount: <%= filter.amount%><br>
+                        <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
+                    </p>
+                </div>
+                <%});%>
+            </div>
+            <div id="eFilters">
+                <h3>Extra Filters:</h3>
+                <% extra.forEach( (filter) => {%>
+                <div class="filter">
+                    <p>Width: <%= filter.width%><br>
+                        Height: <%= filter.height%><br>
+                        Depth: <%= filter.depth%><br>
+                        Amount: <%= filter.amount%><br>
+                        <a href="/removeFilter?filterId=<%= filter._id%>&avuId=<%= current._id%>">Remove Filter</a>
+                    </p>
+                </div>
+                <%});%>
+            </div>
+            <p>Last Date Maintained: <%= current.lastDateMaintained%></p>
         </div>
+
+        <div id="map">
+
+        </div>
+
+        <div id="addFilters">
+            <form action="/addFilter" method="post">
+                <h4>Add Filter</h4>
+                <p>Filter Type: <select name="type">
+                        <option value="primary">Primary</option>
+                        <option value="secondary">Secondary</option>
+                        <option value="extra">Extra(clean ones nearby)</option>
+                    </select></p>
+                <p>Width: <br><input type="number" name="width"/></p>
+                <p>Height:<br><input type="number" name="height"/></p>
+                <p>Depth: <br><input type="number" name="depth"/></p>
+                <p>Amount:<br><input type="number" name="amount"/></p>
+                <input type="hidden" name="id" value="<%= current._id%>"/>
+                <input type="submit" value="Add Filter"/>
+            </form>
+        </div>
+
         <div id="footer">
+            <p><a href="/editAvu?avuId=<%= current._id%>&buildingId=<%= current.buildingId%>">Edit <%= current.name%></a></p>
             <p><a href="/deleteAvu?avuId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
         </div>
     </body>

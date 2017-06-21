@@ -44,6 +44,7 @@ app.post('/login', urlEncodedParser, (req, res) => {
 app.get('/home', (req, res) => {
     // console.log('in the default route. home page');
     handleHome.parseHome((err, info) => {
+        // console.log(JSON.stringify(info, null, 2));
         res.render('home', info);
 
     });

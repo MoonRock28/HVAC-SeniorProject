@@ -7,12 +7,12 @@ const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
 function saveFan(body, callback) {
-    let functionArray = [], name, buildingId;
+    let functionArray = [];
     let lastDate = new Date();
     let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
     let newFan = {
         name: body.name,
-        // googleMapSpot: body.googleMapSpot,
+        coordinates: {lat: body.lat, lng: body.lng},
         buildingName: body.buildingName,
         buildingId: body.buildingId,
         floor: body.floor,
@@ -36,8 +36,6 @@ function saveFan(body, callback) {
         });
         functionArray.push( (cb) => {
             buildingService.getBuilding(body.buildingId, (err, buildingRecord) => {
-                name = buildingRecord.name;
-                buildingId = buildingRecord._id;
                 buildingRecord.fans.push(objectId);
                 buildingService.editBuilding(buildingRecord, buildingRecord._id, cb);
             });
@@ -45,7 +43,7 @@ function saveFan(body, callback) {
 
         parallel(functionArray, (err, results) => {
             if(err) console.error("Error in //saveFan...\n" + err);
-            callback(null, {id: objectId, building: {name: name, id: buildingId}});
+            callback(null, {id: objectId, building: {name: body.buildingName, id: body.buildingId}});
         });
     });
 }
@@ -53,8 +51,6 @@ function saveFan(body, callback) {
 function deleteFan(fanId, callback) {
     serveFan.getFan(fanId, (err, fanRecord) => {
         let functionArray = [];
-
-        // functionArray.push( (cb) => { return serveMap.delete}); not finished yet...
 
         fanRecord.belts.forEach( (beltId) => {
             functionArray.push( (cb) => {

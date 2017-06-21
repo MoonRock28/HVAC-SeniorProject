@@ -23,7 +23,7 @@ function newAVU(avu, callback) {
 function editAVU(avu, objectId, callback) {
     AVU.findOne({_id: objectId}).then( (record) => {
         record.name = avu.name;
-        record.coordinates = avu.coordinates;
+        record.coordinates = {lat: avu.coordinates.lat, lng: avu.coordinates.lng};
         record.buildingName = avu.buildingName;
         record.buildingId = avu.buildingId;
         record.floor = avu.floor;

@@ -96,17 +96,17 @@ function parseHome(callback) {
 
         function compareNumBlack(a, b) {
             if(a.numBlack > b.numBlack)
-                return 1;
-            if(a.numBlack < b.numBlack)
                 return -1;
+            if(a.numBlack < b.numBlack)
+                return 1;
             return 0;
         }
 
         function compareDate(a, b) {
             if(a.nextDateToCheck > b.nextDateToCheck)
-                return -1;
-            if(a.nextDateToCheck < b.nextDateToCheck)
                 return 1;
+            if(a.nextDateToCheck < b.nextDateToCheck)
+                return -1;
             return 0;
         }
 

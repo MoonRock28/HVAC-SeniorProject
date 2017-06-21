@@ -51,17 +51,30 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/updateAvu', urlEncodedParser, (req, res) => {
+    app.post('/quickUpdateAvu', urlEncodedParser, (req, res) => {
         // console.log(req.body);
         avuHandler.quickUpdate(req.body.nextDateToCheck, req.body.avuId, (err) => {
             if (err) console.error('Error in avu quickUpdate...\n' + err);
-            res.redirect(`/avu?id=${req.body.avuId}`);
+            handleBuilding.updateColorNums(req.body.buildingId, (err) => {
+                res.redirect(`/avu?id=${req.body.avuId}`);
+            });
         });
     });
 
-    app.post('/editAvu/:id', (req, res) => {
-        console.log('this is the editAvu route that reroutes to /avu');
-        res.render('avu'/*, {avuContent} */);
+    app.post('/updateAvu', urlEncodedParser, (req, res) => {
+        //console.log(req.body);
+        avuHandler.updateAvu(req.body, (err, objectId) => {
+            res.redirect('/avu?id=' + objectId);
+        });
+    });
+
+    app.get('/editAvu', (req, res) => {
+        //console.log('this is the editAvu route that reroutes to /avu');
+        //console.log(req.query.avuId);
+        avuHandler.getAvuInfo(req.query.avuId, (err, avuInfo) => {
+            //console.log(JSON.stringify(avuInfo, null, 2));
+            res.render('editAvu', avuInfo);
+        });
     });
 
     app.post('/addFilter', urlEncodedParser, (req, res) => {

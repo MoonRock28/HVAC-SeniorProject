@@ -77,9 +77,9 @@ function getBuildingInfo(objectId, callback) {
 
         function compareDate(a, b) {
             if(a.nextDateToCheck > b.nextDateToCheck)
-                return -1;
-            if(a.nextDateToCheck < b.nextDateToCheck)
                 return 1;
+            if(a.nextDateToCheck < b.nextDateToCheck)
+                return -1;
             return 0;
         }
 
