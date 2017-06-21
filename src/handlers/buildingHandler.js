@@ -1,15 +1,21 @@
 'use strict';
 const handleAvu = require('./avuHandler');
+const handleFan = require('./fanHandler');
 const buildingService = require('../services/serveBuilding');
 const homeContent = require('../services/serveHomeContent');
 const serveAvu = require('../services/serveAvu');
 const serveFan = require('../services/serveFan');
+// const serveMap = require('../services/serveMap');
 const parallel = require('async').parallel;
 
 
 function saveBuilding(body, callback){
+    // console.log(body.lat + ", " + body.lng);
     let newBuilding = {
-        name: body.name
+        name: body.name,
+        coordinates: {lat: body.lat, lng: body.lng},
+        numRed: 0,
+        numBlack: 0
     };
 
     buildingService.newBuilding(newBuilding, (err, objectId) => {
@@ -115,11 +121,11 @@ function removeBuilding (buildingId, callback) {
             });
         });
 
-        // buildingRecord.fans.forEach( (fanId) => {
-        //     functionArray.push( (cb) => {
-        //         return handleFan.deleteFan(fanId, buildingId, cb);
-        //     });
-        // });
+        buildingRecord.fans.forEach( (fanId) => {
+            functionArray.push( (cb) => {
+                return handleFan.deleteFan(fanId, buildingId, cb);
+            });
+        });
 
         parallel(functionArray, (err, results) => {
             buildingService.deleteBuilding(buildingId, callback);

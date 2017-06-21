@@ -2,6 +2,19 @@
 <html>
     <head>
         <title>New Air Ventilation Unit</title>
+        <style>
+            #map {
+                height: 800px;
+                width: 800px;
+                position: fixed;
+                overflow: auto;
+            }
+            html, body {
+                height: 100%;
+                margin: 0%;
+                padding: 0%;
+            }
+        </style>
     </head>
     <body>
     <div id="header">
@@ -12,31 +25,68 @@
     <div id="nav">
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="/building?id=<%= buildingId%>"><%= buildingName%></a></li>
+            <li><a href="/building?id=<%= building._id%>"><%= building.name%></a></li>
         </ul>
     </div>
-    <div id="content">
-        <form action="/saveAVU" method="post">
-            <div id="details">
-                <p>Name:<br>
-                    <input type="text" name="name"></p>
-                <p>Floor:<br>
-                    <input type="text" name="floor"></p>
-                <p>Mechanical Room:<br>
-                    <input type="text" name="mechanicalRoom"></p>
-                <p>Next Date To Check:<br>
-                    <input type="date" name="nextDateToCheck"></p>
-                <p>Additional Notes:<br>
-                    <input type="text" name="additionalNotes"></p>
-                <input type="hidden" name="buildingId" value="<%= buildingId%>" />
-                <input type="hidden" name="buildingName" value="<%= buildingName%>" />
-            </div>
-            <div id="map">
 
-            </div>
-            <input type="submit" value="Save AVU"/>
-        </form>
-    </div>
+    <form action="/saveAVU" method="post">
+
+        <p>Name:<br>
+            <input type="text" name="name"></p>
+        <p>Floor:<br>
+            <input type="text" name="floor"></p>
+        <p>Mechanical Room:<br>
+            <input type="text" name="mechanicalRoom"></p>
+        <p>Next Date To Check:<br>
+            <input type="date" name="nextDateToCheck"></p>
+        <p>Additional Notes:<br>
+            <input type="text" name="additionalNotes"></p>
+        <input type="hidden" name="buildingId" value="<%= building._id%>" />
+        <input type="hidden" name="buildingName" value="<%= building.name%>" />
+
+        <div id="map"></div>
+        <script type="text/javascript">
+            let map, marker = undefined, buildingCenter = [];
+            function initMap() {
+                buildingCenter.push(<%- JSON.stringify(building.coordinates)%>);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: buildingCenter[0], //byuIdaho building
+                    zoom: 19
+                });
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    placeMarker(event.latLng);
+                });
+            }
+            function placeMarker(location) {
+                if (marker !== undefined) {
+                    marker.setMap(null);
+                    marker = undefined;
+                }
+
+//                    console.log(JSON.stringify(location));
+
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                map.setCenter(location);
+
+//                    console.log(location.lat());
+                document.getElementById('formMapLat').value = location.lat() ;
+                document.getElementById('formMapLng').value = location.lng() ;
+
+            }
+        </script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+                async defer></script>
+        <input type="hidden" id="formMapLat" name="lat" value="" />
+        <input type="hidden" id="formMapLng" name="lng" value="" />
+        <input type="submit" value="Save AVU"/>
+    </form>
+
 
     <div id="footer">
 

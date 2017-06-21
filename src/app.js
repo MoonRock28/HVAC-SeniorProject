@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Home = require('./models/homeContent');
 const handleHome = require('./handlers/homeHandler');
-
 const bodyParser = require('body-parser');
 const urlEncodedParser = bodyParser.urlencoded({ extended: false});
 
@@ -16,7 +15,7 @@ mongoose.connect('mongodb://localhost/HVAC');
 
 mongoose.connection.on('open', () => {
     console.log('connection to mongoDB has been established...');
-    Home.findOneOrCreate({}, {buildings: [], avus: [], fans: []}, (err, record) => {
+    Home.findOneOrCreate({}, {buildings: [], avus: [], fans: [], colorCheckDate: new Date()}, (err, record) => {
         console.log('Home Content Found...');
     });
 });

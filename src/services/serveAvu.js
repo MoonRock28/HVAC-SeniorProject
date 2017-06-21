@@ -4,7 +4,7 @@ const AVU = require('../models/AVUs');
 function newAVU(avu, callback) {
     let thisAVU = new AVU({
         name: avu.name,
-        // googleMapSpot: avu.googleMapSpot,
+        coordinates: {lat: avu.coordinates.lat, lng: avu.coordinates.lng},
         buildingName: avu.buildingName,
         buildingId: avu.buildingId,
         floor: avu.floor,
@@ -23,7 +23,7 @@ function newAVU(avu, callback) {
 function editAVU(avu, objectId, callback) {
     AVU.findOne({_id: objectId}).then( (record) => {
         record.name = avu.name;
-        // record.googleMapSpot = avu.googleMapSpot;
+        record.coordinates = avu.coordinates;
         record.buildingName = avu.buildingName;
         record.buildingId = avu.buildingId;
         record.floor = avu.floor;

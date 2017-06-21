@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GoogleMapSchema = new Schema({
-    //whatever goes in here.
+    coordinates: {lat: Number, lng: Number},
+    zoom: Number
 });
 
 const GoogleMap = mongoose.model('googleMap', GoogleMapSchema);

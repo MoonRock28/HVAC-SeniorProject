@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const FanSchema = new Schema({
     name: String,
-    // googleMapSpot: {type: Schema.Types.ObjectId, ref: 'GoogleMap'},
+    coordinates: {lat: Number, lng: Number},
     buildingName: String,
     buildingId: String,
     floor: String,

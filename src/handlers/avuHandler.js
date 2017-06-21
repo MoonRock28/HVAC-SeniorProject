@@ -3,6 +3,7 @@ const buildingService = require('../services/serveBuilding');
 const homeContent = require('../services/serveHomeContent');
 const avuService = require('../services/serveAvu');
 const filterService = require('../services/serveFilter');
+// const serveMap = require('../services/serveMap');
 const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
@@ -12,7 +13,7 @@ function saveAVU(body, callback) {
     let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
     let newAvu = {
         name: body.name,
-        // googleMapSpot: body.googleMapSpot,
+        coordinates: {lat: body.lat, lng: body.lng},
         buildingName: body.buildingName,
         buildingId: body.buildingId,
         floor: body.floor,
@@ -22,6 +23,7 @@ function saveAVU(body, callback) {
         statusColor: statusColor,
         additionalNotes: body.additionalNotes
     };
+    //console.log(JSON.stringify(newAvu, null, 4));
 
     avuService.newAVU(newAvu, (err, objectId) => {
         functionArray.push( (cb) => {
@@ -49,8 +51,6 @@ function saveAVU(body, callback) {
 function deleteAVU(avuId, callback) {
     avuService.getAVU(avuId, (err, avuRecord) => {
         let functionArray = [];
-
-        // functionArray.push( (cb) => { return serveMap.delete}); not finished yet...
 
         if (avuRecord.primaryFilters !== null) {
             avuRecord.primaryFilters.forEach((filterId) => {

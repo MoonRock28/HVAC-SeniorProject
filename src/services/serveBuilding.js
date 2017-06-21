@@ -4,8 +4,8 @@ const Building = require('../models/building');
 function newBuilding(building, callback) {
     console.log(building);
     let thisBuilding = new Building({
-        name: building.name // ,
-        // googleMapSpot: building.googleMapSpot
+        name: building.name,
+        coordinates: building.coordinates
     });
 
     thisBuilding.save().then(() => {
@@ -20,7 +20,7 @@ function newBuilding(building, callback) {
 function editBuilding(building, objectId, callback) {
     Building.findOne({_id: objectId}).then( (record) => {
         record.name = building.name;
-        // record.googleMapSpot = building.googleMapSpot;
+        record.coordinates = building.coordinates;
         record.AVUs = building.AVUs;
         record.fans = building.fans;
         record.numBlack = building.numBlack;

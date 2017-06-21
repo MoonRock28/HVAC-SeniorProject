@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const AVUSchema = new Schema({
     name: String,
-    // googleMapSpot: {type: Schema.Types.ObjectId, ref: 'GoogleMap'},
+    coordinates: {lat: Number, lng: Number},
     buildingName: String,
     buildingId: {type: Schema.Types.ObjectId, ref: 'Building'},
     floor: String,

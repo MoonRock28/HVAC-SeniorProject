@@ -1,8 +1,8 @@
 'use strict';
 
-function getStatusColor(nextDateToMaintain, lastDateMaintained) {
+function getStatusColor(nextDateToCheck, lastDateMaintained) {
     let today = new Date().getTime();
-    let next = new Date(nextDateToMaintain).getTime();
+    let next = new Date(nextDateToCheck).getTime();
     let last = new Date(lastDateMaintained).getTime();
     // console.log(today);
     // console.log(next);

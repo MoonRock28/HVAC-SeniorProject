@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const homeSchema = new Schema({
     buildings: [{type: Schema.Types.ObjectId, ref: 'Building'}],
     allAvus: [{type: Schema.Types.ObjectId, ref: 'AVU'}], //ordered by statusColor/lastDateMaintained
-    allFans: [{type: Schema.Types.ObjectId, ref: 'Fan'}] //ordered by statusColor/lastDateMaintained
+    allFans: [{type: Schema.Types.ObjectId, ref: 'Fan'}], //ordered by statusColor/lastDateMaintained
+    colorCheckDate: Date
 });
 
 homeSchema.statics.findOneOrCreate = function(condition, doc, callback) {

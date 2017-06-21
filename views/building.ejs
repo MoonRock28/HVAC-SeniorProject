@@ -2,6 +2,19 @@
 <html>
     <head>
         <title>Building: <%= building.name%></title>
+        <style>
+            #map {
+                height: 800px;
+                width: 800px;
+                position: fixed;
+                overflow: auto;
+            }
+            html, body {
+                height: 100%;
+                margin: 0%;
+                padding: 0%;
+            }
+        </style>
     </head>
     <body>
         <div id="header">
@@ -22,9 +35,92 @@
                 <p># of black status color items: <%= building.numBlack%></p>
                 <p># of red status color items: <%= building.numRed%></p>
             </div>
-            <div id="map">
+            <div id="map"></div>
+            <script type="text/javascript">
+                let map;//, location, numRed, numBlack, id;
+                let avus = [], fans = [];
+                let avuMarkers = [], fanMarkers = [], buildingCenter = [];
 
-            </div>
+
+                function initMap() {
+                    buildingCenter.push(<%- JSON.stringify(building.coordinates)%>);
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: buildingCenter[0], //byuIdaho building
+                        zoom: 19
+                    });
+
+                    <% if (avus.length > 0) {
+                    avus.forEach( (avu) => {
+                    %>
+                    avus.push(<%- JSON.stringify(avu)%>);
+                    <% });
+                    }%>
+
+                    <% if (fans.length > 0) {
+                    fans.forEach( (fan) => {
+                    %>
+                    fans.push(<%- JSON.stringify(fan)%>);
+                    <% });
+                    }%>
+
+                    let largeInfowindow = new google.maps.InfoWindow();
+                    let bounds = new google.maps.LatLngBounds();
+
+                    avus.forEach( (avu, i) => {
+                        console.log(JSON.stringify(avu));
+                        let marker = new google.maps.Marker({
+                            map: map,
+                            position: avu.coordinates,
+                            title: avu.title,
+                            animation: google.maps.Animation.DROP,
+                            id: i
+                        });
+                        avuMarkers.push(marker);
+
+                        bounds.extend(marker.position);
+
+                        marker.addListener('click', () => {
+                            populateInfoWindow(this, largeInfowindow);
+                        });
+                    });
+
+                    fans.forEach( (fan, i) => {
+                        console.log(JSON.stringify(fan));
+                        let marker = new google.maps.Marker({
+                            map: map,
+                            position: fan.coordinates,
+                            title: fan.title,
+                            animation: google.maps.Animation.DROP,
+                            id: i
+                        });
+                        fanMarkers.push(marker);
+
+                        bounds.extend(marker.position);
+
+                        marker.addListener('click', () => {
+                            populateInfoWindow(this, largeInfowindow);
+                        });
+                    });
+                    map.fitBounds(bounds);
+                }
+
+                function populateInfoWindow(marker, infowindow) {
+                    if (infowindow.marker !== marker) {
+                        infowindow.marker = marker;
+                        infowindow.setContent('<div>' + marker.title + '</div>');
+//                        infowindow.setContent('<div><a href="/building?id=' + marker.id + '">' + marker.title + '</a></div>' +
+//                            '<div>Black items: ' + marker.numBlack + '<br>Red items: ' + marker.numRed + '</div>');
+                        infowindow.open(map, marker);
+
+                        infowindow.addListener('closeclick', () => {
+                            infowindow.setMarker(null);
+                        });
+                    }
+                }
+            </script>
+            <script type="text/javascript"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+                    async defer></script>
             <div id="avus">
                 <h3>Air Ventilation Units:</h3>
                 <% avus.forEach( (avu) => {%>

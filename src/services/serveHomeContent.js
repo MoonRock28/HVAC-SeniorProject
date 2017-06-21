@@ -16,6 +16,7 @@ function editHomeContent(home, objectId, callback) {
         record.buildings = home.buildings;
         record.allAvus = home.allAvus;
         record.allFans = home.allFans;
+        record.colorCheckDate = home.colorCheckDate;
         record.save().then( () => {
             console.log('Home Content Updated...');
             callback(null, objectId);
@@ -31,7 +32,8 @@ function newHomeContent(home, callback) {
     let thisHome = new Home({
         buildings: home.buildings,
         allAvus: home.allAvus,
-        allFans: home.allFans
+        allFans: home.allFans,
+        colorCheckDate: home.colorCheckDate
     });
 
     thisHome.save().then( () => {

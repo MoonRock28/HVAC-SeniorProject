@@ -18,8 +18,11 @@ module.exports = (app) => {
     app.get('/createAvu', (req, res) => {
         console.log(req.query.buildingId);
         console.log(req.query.buildingName);
+        handleBuilding.getBuildingInfo(req.query.buildingId, (err, building) => {
+            console.log(JSON.stringify(building, null, 4));
+            res.render('newAvu', building);
+        });
 
-        res.render('newAvu', {buildingId: req.query.buildingId, buildingName: req.query.buildingName, });
     });
 
     app.get('/deleteAvu', (req, res) => {
@@ -40,7 +43,7 @@ module.exports = (app) => {
     });
 
     app.post('/saveAvu', urlEncodedParser, (req, res) => {
-        // console.log(req.body);
+        //console.log(req.body);
         avuHandler.saveAVU(req.body, (err, info) => {
             handleBuilding.updateColorNums(info.building.id, (err, result) => {
                 res.redirect(`/avu?id=${info.id}`);

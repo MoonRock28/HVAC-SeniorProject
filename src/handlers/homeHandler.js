@@ -4,6 +4,8 @@ const serveHome = require('../services/serveHomeContent');
 const serveBuilding = require('../services/serveBuilding');
 const serveAvu = require('../services/serveAvu');
 const serveFan = require('../services/serveFan');
+// const serveMap = require('../services/serveMap');
+const serveColor = require('../services/serveColor');
 const parallel = require('async').parallel;
 
 function parseHome(callback) {
@@ -27,6 +29,7 @@ function parseHome(callback) {
                         handleBuilding.updateColorNums(building._id, (err, objectId) => {
                             if (err) console.error(err);
                         });
+
                     });
                     // console.log(handleBuilding);
 
@@ -146,6 +149,55 @@ function removeFanFromList(fanId, callback) {
             homeContent.allFans.splice(fanIndex, 1);
         }
         serveHome.editHomeContent(homeContent, homeContent._id, callback);
+    });
+}
+
+function dailyColorUpdate(callback) {
+    serveHome.getHomeContent( (err, homeRecord) => {
+        if (homeRecord.colorCheckDate.getDay() !== new Date().getDay()) {
+            //get info
+            parseHome( (err, info) => {
+                let allArray = [], avuArray = [], fanArray = [];
+
+                //update status color of AVUs
+                allArray.push( (allcb) => {
+                    avuArray = info.avus.map( (avu) => {
+                        return (cb) => {
+                            avu.statusColor = serveColor.getStatusColor(avu.nextDateToCheck, avu.lastDateMaintained);
+                            serveAvu.editAVU(avu, avu._id, cb);
+                        }
+                    });
+
+                    parallel(avuArray, (err, results) => {
+                        if (err) console.error("Error in dailyColorUpdate in AVUs..." + err);
+                        allcb();
+                    });
+                });
+
+
+                //update status color of fans
+                allArray.push( (allcb) => {
+                    fanArray = info.fans.map( (fan) => {
+                        return (cb) => {
+                            fan.statusColor = serveColor.getStatusColor(fan.nextDateToCheck, fan.lastDateMaintained);
+                            serveFan.editFan(fan, fan._id, cb);
+                        }
+                    });
+                    parallel(fanArray, (err, results) => {
+                        if (err) console.error("Error in dailyColorUpdate in Fans..." + err);
+                        allcb();
+                    });
+                });
+
+                parallel(allArray, (err, results) => {
+                    if (err) console.error("Error in updating colors..." + err);
+                    callback(true);
+                });
+            });
+        } else {
+            console.log("Color Update not needed...");
+            callback(false);
+        }
     });
 }
 
