@@ -18,22 +18,26 @@ function parseHome(callback) {
             allArray.push( (allcb) => {
                 buildArray = record.buildings.map( (id) => {
                     return (cb) => {
-                        serveBuilding.getBuilding(id, cb);
+                        handleBuilding.updateColorNums(id, (err) => {
+                            serveBuilding.getBuilding(id, (err, record) => {
+                                cb(null, record);
+                            });
+                        });
                     }
                 });
 
                 parallel(buildArray, (err, results) => {
                     // sort the array based on highest number of numBlacks.
-                    results.forEach( (building) => {
-                        // console.log(building);
-                        handleBuilding.updateColorNums(building._id, (err, objectId) => {
-                            if (err) console.error(err);
-                        });
-
-                    });
+                    // results.forEach( (building) => {
+                    //     // console.log(building);
+                    //     handleBuilding.updateColorNums(building._id, (err, objectId) => {
+                    //         if (err) console.error(err);
+                    //     });
+                    //
+                    // });
                     // console.log(handleBuilding);
-
-                    results.sort(compareNumBlack);
+                    results.sort(compareNumRed); //start sort
+                    results.sort(compareNumBlack); //overriding sort
 
                     // save the sorted array to buildings[]
                     results.forEach( (result) => {
@@ -92,6 +96,14 @@ function parseHome(callback) {
                         allcb();
                     });
                 })
+        }
+
+        function compareNumRed(a, b) {
+            if(a.numRed > b.numRed)
+                return -1;
+            if(a.numRed < b.numRed)
+                return 1;
+            return 0;
         }
 
         function compareNumBlack(a, b) {
