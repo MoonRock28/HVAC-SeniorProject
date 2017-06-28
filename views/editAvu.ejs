@@ -1,100 +1,100 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Edit <%= current.name%></title>
-    <style>
-        #map {
-            height: 800px;
-            width: 800px;
-            position: fixed;
-            overflow: auto;
-        }
-        html, body {
-            height: 100%;
-            margin: 0%;
-            padding: 0%;
-        }
-    </style>
-</head>
-<body>
-<div id="header">
-    <img src=""/>
-    <h1>HVAC Stewardship Manager</h1>
-    <h1>Edit <%= current.name%></h1>
-</div>
-<div id="nav">
-    <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
-        <li><a href="/avu?id=<%= current._id%>"><%= current.name%></a></li>
-    </ul>
-</div>
-
-<form action="/updateAVU" method="post">
-
-    <p>Name:<br>
-        <input type="text" name="name" value="<%= current.name%>"></p>
-    <p>Floor:<br>
-        <input type="text" name="floor" value="<%= current.floor%>"></p>
-    <p>Mechanical Room:<br>
-        <input type="text" name="mechanicalRoom" value="<%= current.mechanicalRoom%>"></p>
-    <p>Additional Notes:<br>
-        <input type="text" name="additionalNotes" value="<%= current.additionalNotes%>"></p>
-    <input type="hidden" name="buildingId" value="<%= current.buildingId%>" />
-    <input type="hidden" name="buildingName" value="<%= current.buildingName%>" />
-    <input type="hidden" name="_id" value="<%= current._id%>" />
-
-    <div id="map"></div>
-    <script type="text/javascript">
-        let map, marker = undefined, avuCenter = [];
-        function initMap() {
-            avuCenter.push(<%- JSON.stringify(current.coordinates)%>);
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: avuCenter[0],
-                zoom: 19
-            });
-
-            marker = new google.maps.Marker({
-                position: avuCenter[0],
-                map: map
-            });
-
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
-            });
-        }
-        function placeMarker(location) {
-            if (marker !== undefined) {
-                marker.setMap(null);
-                marker = undefined;
+    <head>
+        <title>Edit <%= current.name%></title>
+        <style>
+            #map {
+                height: 800px;
+                width: 800px;
+                position: fixed;
+                overflow: auto;
             }
+            html, body {
+                height: 100%;
+                margin: 0%;
+                padding: 0%;
+            }
+        </style>
+    </head>
+    <body>
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Stewardship Manager</h1>
+        <h1>Edit <%= current.name%></h1>
+    </div>
+    <div id="nav">
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
+            <li><a href="/avu?id=<%= current._id%>"><%= current.name%></a></li>
+        </ul>
+    </div>
 
-//                    console.log(JSON.stringify(location));
+    <form action="/updateAVU" method="post">
 
-            marker = new google.maps.Marker({
-                position: location,
-                map: map
-            });
+        <p>Name:<br>
+            <input type="text" name="name" value="<%= current.name%>"></p>
+        <p>Floor:<br>
+            <input type="text" name="floor" value="<%= current.floor%>"></p>
+        <p>Mechanical Room:<br>
+            <input type="text" name="mechanicalRoom" value="<%= current.mechanicalRoom%>"></p>
+        <p>Additional Notes:<br>
+            <input type="text" name="additionalNotes" value="<%= current.additionalNotes%>"></p>
+        <input type="hidden" name="buildingId" value="<%= current.buildingId%>" />
+        <input type="hidden" name="buildingName" value="<%= current.buildingName%>" />
+        <input type="hidden" name="_id" value="<%= current._id%>" />
 
-            map.setCenter(location);
+        <div id="map"></div>
+        <script type="text/javascript">
+            let map, marker = undefined, avuCenter = [];
+            function initMap() {
+                avuCenter.push(<%- JSON.stringify(current.coordinates)%>);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: avuCenter[0],
+                    zoom: 19
+                });
 
-//                    console.log(location.lat());
-            document.getElementById('formMapLat').value = location.lat() ;
-            document.getElementById('formMapLng').value = location.lng() ;
+                marker = new google.maps.Marker({
+                    position: avuCenter[0],
+                    map: map
+                });
 
-        }
-    </script>
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
-            async defer></script>
-    <input type="hidden" id="formMapLat" name="lat" value="<%= current.coordinates.lat %>" />
-    <input type="hidden" id="formMapLng" name="lng" value="<%= current.coordinates.lng %>" />
-    <input type="submit" value="Save AVU"/>
-</form>
+                google.maps.event.addListener(map, 'click', function(event) {
+                    placeMarker(event.latLng);
+                });
+            }
+            function placeMarker(location) {
+                if (marker !== undefined) {
+                    marker.setMap(null);
+                    marker = undefined;
+                }
+
+    //                    console.log(JSON.stringify(location));
+
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                map.setCenter(location);
+
+    //                    console.log(location.lat());
+                document.getElementById('formMapLat').value = location.lat() ;
+                document.getElementById('formMapLng').value = location.lng() ;
+
+            }
+        </script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=<MYKEY>&v=3&callback=initMap"
+                async defer></script>
+        <input type="hidden" id="formMapLat" name="lat" value="<%= current.coordinates.lat %>" />
+        <input type="hidden" id="formMapLng" name="lng" value="<%= current.coordinates.lng %>" />
+        <input type="submit" value="Save AVU"/>
+    </form>
 
 
-<div id="footer">
+    <div id="footer">
 
-</div>
-</body>
+    </div>
+    </body>
 </html>

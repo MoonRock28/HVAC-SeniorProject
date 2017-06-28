@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Fan: <%= current.name%></title>
-</head>
-<body>
-<div id="header">
-    <img src=""/>
-    <h1>HVAC Stewardship Manager</h1>
-    <h1>Fan: <%= current.name%></h1>
-</div>
-<div id="nav">
-    <ul>
-        <li><a href="/home">Home</a></li>
-        <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
-    </ul>
-</div>
-<div id="content">
+    <head>
+        <title>Fan: <%= current.name%></title>
+        <style>
+            #map {
+                height: 800px;
+                width: 800px;
+                position: fixed;
+                overflow: auto;
+            }
+            html, body {
+                height: 100%;
+                margin: 0%;
+                padding: 0%;
+            }
+        </style>
+    </head>
+    <body>
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Stewardship Manager</h1>
+        <h1>Fan: <%= current.name%></h1>
+    </div>
+    <div id="nav">
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
+        </ul>
+    </div>
+
     <div id="details">
         <p>
             Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
@@ -26,7 +39,7 @@
             Floor: <%= current.floor%><br>
             Mechanical Room: <%= current.mechanicalRoom%><br>
             Additional Notes: <%= current.additionalNotes%><br>
-        <form action="/updateFan" method="post">
+        <form action="/quickUpdateFan" method="post">
             <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
             <input type="hidden" name="fanId" value="<%= current._id%>"/>
             <input type="submit" value="<%= current.name%> maintained" />
@@ -56,9 +69,25 @@
         </div>
         <p>Last Date Maintained: <%= current.lastDateMaintained.toDateString()%></p>
     </div>
-    <div id="map">
+    <div id="map"></div>
+    <script type="text/javascript">
+        let map, marker = undefined, fanCenter = [];
+        function initMap() {
+            fanCenter.push(<%- JSON.stringify(current.coordinates)%>);
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: fanCenter[0],
+                zoom: 20
+            });
 
-    </div>
+            marker = new google.maps.Marker({
+                position: fanCenter[0],
+                map: map
+            });
+        }
+    </script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=<MYKEY>&v=3&callback=initMap"
+            async defer></script>
     <div id="addBelts">
         <form action="/addBelt" method="post">
             <h4>Add Belt</h4>
@@ -72,9 +101,10 @@
             <input type="submit" value="Add Belt"/>
         </form>
     </div>
-</div>
-<div id="footer">
-    <p><a href="/deleteFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
-</div>
-</body>
+
+    <div id="footer">
+        <p><a href="/editFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Edit <%= current.name%></a></p>
+        <p><a href="/deleteFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
+    </div>
+    </body>
 </html>

@@ -130,9 +130,23 @@ function quickUpdate(nextDate, fanId, callback) {
     })
 }
 
+function updateFan(body, callback) {
+    serveFan.getFan(body._id, (err, record) => {
+        record.name = body.name;
+        record.floor = body.floor;
+        record.mechanicalRoom = body.mechanicalRoom;
+        record.fanSheave = body.fanSheave;
+        record.motorSheave = body.motorSheave;
+        record.additionalNotes = body.additionalNotes;
+        record.coordinates = {lat: body.lat, lng: body.lng};
+        serveFan.editFan(record, body._id, callback);
+    });
+}
+
 module.exports = {
     saveFan: saveFan,
     deleteFan: deleteFan,
     getFanInfo: getFanInfo,
-    quickUpdate: quickUpdate
+    quickUpdate: quickUpdate,
+    updateFan: updateFan
 };

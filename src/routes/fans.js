@@ -33,12 +33,21 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/editFan/:id', (req, res) => {
-        console.log('this is the editFan route that reroutes to /fan');
-        res.render('fan'/*, {fanContent}*/);
+    app.get('/editFan', (req, res) => {
+        // console.log(req.body);
+        handleFan.getFanInfo(req.query.fanId, (err, fanInfo) => {
+            // console.log(JSON.stringify(fanInfo, null, 2));
+            res.render('editFan', fanInfo);
+        });
     });
 
     app.post('/updateFan', urlEncodedParser, (req, res) => {
+        handleFan.updateFan(req.body, (err, objectId) => {
+            res.redirect('/fan?id=' + objectId);
+        });
+    });
+
+    app.post('/quickUpdateFan', urlEncodedParser, (req, res) => {
         // console.log(req.body);
         handleFan.quickUpdate(req.body.nextDateToCheck, req.body.fanId, (err) => {
             if (err) console.error('Error in fan quickUpdate...\n' + err);
