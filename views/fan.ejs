@@ -3,108 +3,153 @@
     <head>
         <title>Fan: <%= current.name%></title>
         <style>
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                "header header header header header"
+                "nav nav nav nav nav"
+                "details addBelts map map map"
+                "details addBelts map map map"
+                "details addBelts map map map"
+                "footer footer footer footer footer";
+            }
+
+            #header {
+                grid-area: header;
+                color: white;
+            }
+
+            #nav {
+                grid-area: nav;
+                background-color: white;
+            }
+
+            #details {
+                grid-area: details;
+                background-color: white;
+            }
+
+            #addBelts {
+                grid-area: addBelts;
+                background-color: white;
+            }
+
             #map {
-                height: 800px;
-                width: 800px;
+                background-color: white;
+                grid-area: map;
+                width: 100%;
                 position: fixed;
                 overflow: auto;
             }
-            html, body {
-                height: 100%;
-                margin: 0%;
-                padding: 0%;
+
+            #footer {
+                grid-area: footer;
+                background-color: white;
             }
+            /*html, body {*/
+                /*height: 100%;*/
+                /*margin: 0%;*/
+                /*padding: 0%;*/
+            /*}*/
         </style>
     </head>
     <body>
-    <div id="header">
-        <img src=""/>
-        <h1>HVAC Stewardship Manager</h1>
-        <h1>Fan: <%= current.name%></h1>
-    </div>
-    <div id="nav">
-        <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
-        </ul>
-    </div>
-
-    <div id="details">
-        <p>
-            Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
-            Status Color: <%= current.statusColor%><br>
-            Fan Sheave: <%= current.fanSheave%><br>
-            Motor Sheave: <%= current.motorSheave%><br>
-            Building: <%= current.buildingName%><br>
-            Floor: <%= current.floor%><br>
-            Mechanical Room: <%= current.mechanicalRoom%><br>
-            Additional Notes: <%= current.additionalNotes%><br>
-        <form action="/quickUpdateFan" method="post">
-            <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
-            <input type="hidden" name="fanId" value="<%= current._id%>"/>
-            <input type="submit" value="<%= current.name%> maintained" />
-        </form>
-        </p>
-        <div id="reqBelts">
-            <h3>Required Belts:</h3>
-            <% belts.forEach( (belt) => {%>
-            <div class="belt">
-                <p> Type: <%= belt.type%><br>
-                    Amount: <%= belt.amount%><br>
-                    <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
-                </p>
-            </div>
-            <%});%>
+    <div class="gridWrapper">
+        <div id="header">
+            <img src=""/>
+            <h1>HVAC Stewardship Manager</h1>
+            <h1>Fan: <%= current.name%></h1>
         </div>
-        <div id="extraBelts">
-            <h3>Extra Belts:</h3>
-            <% extras.forEach( (belt) => {%>
-            <div class="belt">
-                <p> Type: <%= belt.type%>
-                    Amount: <%= belt.amount%><br>
-                    <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
-                </p>
-            </div>
-            <%});%>
+        <div id="nav">
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
+            </ul>
         </div>
-        <p>Last Date Maintained: <%= current.lastDateMaintained.toDateString()%></p>
-    </div>
-    <div id="map"></div>
-    <script type="text/javascript">
-        let map, marker = undefined, fanCenter = [];
-        function initMap() {
-            fanCenter.push(<%- JSON.stringify(current.coordinates)%>);
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: fanCenter[0],
-                zoom: 20
-            });
 
-            marker = new google.maps.Marker({
-                position: fanCenter[0],
-                map: map
-            });
-        }
-    </script>
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=<MYKEY>&v=3&callback=initMap"
-            async defer></script>
-    <div id="addBelts">
-        <form action="/addBelt" method="post">
-            <h4>Add Belt</h4>
-            <p>Belt: <select name="belt">
-                    <option value="belt">Required Belt</option>
-                    <option value="extra">Extra(new ones nearby)</option>
-                </select></p>
-            <p>Type:<br><input type="text" name="type"/></p>
-            <p>Amount:<br><input type="number" name="amount"/></p>
-            <input type="hidden" name="id" value="<%= current._id%>"/>
-            <input type="submit" value="Add Belt"/>
-        </form>
-    </div>
+        <div id="details">
+            <p>
+                Next Date To Check: <%= current.nextDateToCheck.toDateString()%><br>
+                Status Color: <%= current.statusColor%><br>
+                Fan Sheave: <%= current.fanSheave%><br>
+                Motor Sheave: <%= current.motorSheave%><br>
+                Building: <%= current.buildingName%><br>
+                Floor: <%= current.floor%><br>
+                Mechanical Room: <%= current.mechanicalRoom%><br>
+                Additional Notes: <%= current.additionalNotes%><br>
+            <form action="/quickUpdateFan" method="post">
+                <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
+                <input type="hidden" name="fanId" value="<%= current._id%>"/>
+                <input type="submit" value="<%= current.name%> maintained" />
+            </form>
+            </p>
+            <div id="reqBelts">
+                <h3>Required Belts:</h3>
+                <% belts.forEach( (belt) => {%>
+                <div class="belt">
+                    <p> Type: <%= belt.type%><br>
+                        Amount: <%= belt.amount%><br>
+                        <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
+                    </p>
+                </div>
+                <%});%>
+            </div>
+            <div id="extraBelts">
+                <h3>Extra Belts:</h3>
+                <% extras.forEach( (belt) => {%>
+                <div class="belt">
+                    <p> Type: <%= belt.type%>
+                        Amount: <%= belt.amount%><br>
+                        <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
+                    </p>
+                </div>
+                <%});%>
+            </div>
+            <p>Last Date Maintained: <%= current.lastDateMaintained.toDateString()%></p>
+        </div>
+        <div id="map"></div>
+        <script type="text/javascript">
+            let map, marker = undefined, fanCenter = [];
+            function initMap() {
+                fanCenter.push(<%- JSON.stringify(current.coordinates)%>);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: fanCenter[0],
+                    zoom: 20
+                });
 
-    <div id="footer">
-        <p><a href="/editFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Edit <%= current.name%></a></p>
-        <p><a href="/deleteFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
+                marker = new google.maps.Marker({
+                    position: fanCenter[0],
+                    map: map
+                });
+            }
+        </script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+                async defer></script>
+        <div id="addBelts">
+            <form action="/addBelt" method="post">
+                <h4>Add Belt</h4>
+                <p>Belt: <select name="belt">
+                        <option value="belt">Required Belt</option>
+                        <option value="extra">Extra(new ones nearby)</option>
+                    </select></p>
+                <p>Type:<br><input type="text" name="type"/></p>
+                <p>Amount:<br><input type="number" name="amount"/></p>
+                <input type="hidden" name="id" value="<%= current._id%>"/>
+                <input type="submit" value="Add Belt"/>
+            </form>
+        </div>
+
+        <div id="footer">
+            <p><a href="/editFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Edit <%= current.name%></a></p>
+            <p><a href="/deleteFan?fanId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
+        </div>
     </div>
     </body>
 </html>

@@ -21,7 +21,7 @@ function editBuilding(building, objectId, callback) {
     Building.findOne({_id: objectId}).then( (record) => {
         record.name = building.name;
         record.coordinates = building.coordinates;
-        record.AVUs = building.AVUs;
+        record.FSs = building.FSs;
         record.fans = building.fans;
         record.numBlack = building.numBlack;
         record.numRed = building.numRed;

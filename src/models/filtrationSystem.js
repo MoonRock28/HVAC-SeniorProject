@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const AVUSchema = new Schema({
+const FSSchema = new Schema({
     name: String,
     coordinates: {lat: Number, lng: Number},
     buildingName: String,
@@ -17,6 +17,6 @@ const AVUSchema = new Schema({
     additionalNotes: String
 });
 
-const AVU = mongoose.model('avu', AVUSchema);
+const FS = mongoose.model('fs', FSSchema);
 
-module.exports = AVU;
+module.exports = FS;

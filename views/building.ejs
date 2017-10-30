@@ -3,20 +3,69 @@
     <head>
         <title>Building: <%= building.name%></title>
         <style>
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                "header header header header header"
+                "nav nav nav nav nav"
+                "details details map map map"
+                "fans FSs map map map"
+                "fans FSs map map map"
+                "footer footer footer footer footer";
+            }
+
+            #header {
+                grid-area: header;
+                color: white;
+            }
+
+            #nav {
+                grid-area: nav;
+                background-color: white;
+            }
+
+            #details {
+                grid-area: details;
+                background-color: white;
+            }
+
+            #FSs {
+                grid-area: FSs;
+                background-color: white;
+            }
+
+            #fans {
+                grid-area: fans;
+                background-color: white;
+            }
+
             #map {
-                height: 800px;
-                width: 800px;
+                background-color: white;
+                grid-area: map;
+                width: 100%;
                 position: fixed;
                 overflow: auto;
             }
-            html, body {
-                height: 100%;
-                margin: 0%;
-                padding: 0%;
+
+            #footer {
+                grid-area: footer;
+                background-color: white;
             }
+            /*html, body {*/
+                /*height: 100%;*/
+                /*margin: 0%;*/
+                /*padding: 0%;*/
+            /*}*/
         </style>
     </head>
     <body>
+    <div class="gridWrapper">
         <div id="header">
             <img src=""/>
             <h1>HVAC Stewardship Manager</h1>
@@ -25,12 +74,12 @@
         <div id="nav">
             <ul>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/createAvu?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New AVU</a></li>
+                <li><a href="/createFS?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New Filtration System</a></li>
                 <li><a href="/createFan?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New Fan</a></li>
 
             </ul>
         </div>
-        <div id="content">
+
             <div id="details">
                 <p># of black status color items: <%= building.numBlack%></p>
                 <p># of red status color items: <%= building.numRed%></p>
@@ -38,8 +87,8 @@
             <div id="map"></div>
             <script type="text/javascript">
                 let map;//, location, numRed, numBlack, id;
-                let avus = [], fans = [];
-                let avuMarkers = [], fanMarkers = [], buildingCenter = [];
+                let FSs = [], fans = [];
+                let FSMarkers = [], fanMarkers = [], buildingCenter = [];
 
 
                 function initMap() {
@@ -49,10 +98,10 @@
                         zoom: 19
                     });
 
-                    <% if (avus.length > 0) {
-                    avus.forEach( (avu) => {
+                    <% if (FSs.length > 0) {
+                    FSs.forEach( (thisFS) => {
                     %>
-                    avus.push(<%- JSON.stringify(avu)%>);
+                    FSs.push(<%- JSON.stringify(thisFS)%>);
                     <% });
                     }%>
 
@@ -66,16 +115,16 @@
                     let largeInfowindow = new google.maps.InfoWindow();
                     let bounds = new google.maps.LatLngBounds();
 
-                    avus.forEach( (avu, i) => {
-                        console.log(JSON.stringify(avu));
+                    FSs.forEach( (thisFS, i) => {
+                        console.log(JSON.stringify(thisFS));
                         let marker = new google.maps.Marker({
                             map: map,
-                            position: avu.coordinates,
-                            title: avu.title,
+                            position: thisFS.coordinates,
+                            title: thisFS.title,
                             animation: google.maps.Animation.DROP,
                             id: i
                         });
-                        avuMarkers.push(marker);
+                        FSMarkers.push(marker);
 
                         bounds.extend(marker.position);
 
@@ -101,7 +150,9 @@
                             populateInfoWindow(this, largeInfowindow);
                         });
                     });
-                    map.fitBounds(bounds);
+                    if (FSMarkers.length > 0 || fanMarkers.length > 0) {
+                        map.fitBounds(bounds);
+                    }
                 }
 
                 function populateInfoWindow(marker, infowindow) {
@@ -119,15 +170,15 @@
                 }
             </script>
             <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=<MYKEY>&v=3&callback=initMap"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
                     async defer></script>
-            <div id="avus">
-                <h3>Air Ventilation Units:</h3>
-                <% avus.forEach( (avu) => {%>
-                    <a href="/avu?id=<%= avu._id%>">
-                        <p><%= avu.name%><br>
-                        Status color: <%= avu.statusColor%><br>
-                        Next date to check: <%= avu.nextDateToCheck.toDateString()%><br>
+            <div id="FSs">
+                <h3>Filtration Systems:</h3>
+                <% FSs.forEach( (thisFS) => {%>
+                    <a href="/FS?id=<%= thisFS._id%>">
+                        <p><%= thisFS.name%><br>
+                        Status color: <%= thisFS.statusColor%><br>
+                        Next date to check: <%= thisFS.nextDateToCheck.toDateString()%><br>
                         </p>
                     </a>
                 <%})%>
@@ -143,10 +194,9 @@
                 </a>
                 <%})%>
             </div>
-
-        </div>
         <div id="footer">
             <p><a href="/removeBuilding?buildingId=<%= building.id%>">Remove <%= building.name%></a></p>
         </div>
+    </div>
     </body>
 </html>

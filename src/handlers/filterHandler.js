@@ -1,8 +1,8 @@
 'use strict';
 const serveFilter = require('../services/serveFilter');
-const serveAvu = require('../services/serveAvu');
+const serveFS = require('../services/serveFS');
 
-function addFilter(filter, avuId, callback) {
+function addFilter(filter, FSId, callback) {
     // console.log('id is: ' + avuId);
     let type = filter.type;
     let newFilter = {
@@ -13,38 +13,38 @@ function addFilter(filter, avuId, callback) {
     };
 
     serveFilter.newFilter(newFilter, (err, objectId) => {
-        serveAvu.getAVU(avuId, (err, avuRecord) => {
+        serveFS.getFS(FSId, (err, FSRecord) => {
             if (type === 'primary') {
-                avuRecord.primaryFilters.push(objectId)
+                FSRecord.primaryFilters.push(objectId)
             } else if (type === 'secondary') {
-                avuRecord.secondaryFilters.push(objectId)
+                FSRecord.secondaryFilters.push(objectId)
             } else if (type === 'extra') {
-                avuRecord.extraFilters.push(objectId)
+                FSRecord.extraFilters.push(objectId)
             }
-            serveAvu.editAVU(avuRecord, avuId, callback);
+            serveFS.editFS(FSRecord, FSId, callback);
         });
     });
 }
 
-function removeFilter(filterId, avuId, callback) {
+function removeFilter(filterId, FSId, callback) {
     serveFilter.deleteFilter(filterId, () => {
-        serveAvu.getAVU(avuId, (err, avuRecord) => {
-            let filterIndex = avuRecord.primaryFilters.indexOf(filterId);
+        serveFS.getFS(FSId, (err, FSRecord) => {
+            let filterIndex = FSRecord.primaryFilters.indexOf(filterId);
             if (filterIndex > -1) {
-                avuRecord.primaryFilters.splice(filterIndex, 1);
+                FSRecord.primaryFilters.splice(filterIndex, 1);
             }
 
-            filterIndex = avuRecord.secondaryFilters.indexOf(filterId);
+            filterIndex = FSRecord.secondaryFilters.indexOf(filterId);
             if (filterIndex > -1) {
-                avuRecord.secondaryFilters.splice(filterIndex, 1);
+                FSRecord.secondaryFilters.splice(filterIndex, 1);
             }
 
-            filterIndex = avuRecord.extraFilters.indexOf(filterId);
+            filterIndex = FSRecord.extraFilters.indexOf(filterId);
             if (filterIndex > -1) {
-                avuRecord.extraFilters.splice(filterIndex, 1);
+                FSRecord.extraFilters.splice(filterIndex, 1);
             }
 
-            serveAvu.editAVU(avuRecord, avuId, callback);
+            serveFS.editFS(FSRecord, FSId, callback);
         });
     });
 }

@@ -2,11 +2,42 @@
 <html>
     <head>
         <title>Home</title>
+        <style>
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                "header"
+                "login"
+                "footer";
+            }
+
+            #header {
+                grid-area: header;
+                color: white;
+            }
+
+            #login {
+                grid-area: login;
+                background-color: white;
+            }
+
+            #footer {
+                grid-area: footer;
+                background-color: white;
+            }
+        </style>
     </head>
     <body>
+    <div class="gridWrapper">
         <div id="header">
             <img src=""/>
-            <h1>HVAC Stewardship Manager</h1>
+            <h1>HVAC Inventory Manager</h1>
             <h1>Login</h1>
         </div>
         <div id="login">
@@ -20,7 +51,8 @@
             </form>
         </div>
         <div id="footer">
-
+            <p><a href="https://www.byui.edu">BYU-Idaho Home</a></p>
         </div>
+    </div>
     </body>
 </html>

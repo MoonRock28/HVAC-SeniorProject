@@ -2,7 +2,7 @@
 const handleBuilding = require('./buildingHandler');
 const serveHome = require('../services/serveHomeContent');
 const serveBuilding = require('../services/serveBuilding');
-const serveAvu = require('../services/serveAvu');
+const serveFS = require('../services/serveFS');
 const serveFan = require('../services/serveFan');
 // const serveMap = require('../services/serveMap');
 const serveColor = require('../services/serveColor');
@@ -10,8 +10,8 @@ const parallel = require('async').parallel;
 
 function parseHome(callback) {
     serveHome.getHomeContent( (err, record) => {
-        let buildings = [], avus = [], fans = [],
-            buildArray, avuArray, fanArray, allArray = [];
+        let buildings = [], FSs = [], fans = [],
+            buildArray, FSArray, fanArray, allArray = [];
 
         // console.log(record.buildings);
         if (record.buildings !== undefined && record.buildings.length > 0) {
@@ -49,25 +49,25 @@ function parseHome(callback) {
             })
         }
 
-        // console.log(record.allAvus);
-        if (record.allAvus !== undefined) {
-            // console.log('getting AVUs for home content...');
+        // console.log(record.allFSs);
+        if (record.allFSs !== undefined) {
+            // console.log('getting FSs for home content...');
             allArray.push( (allcb) => {
-                    avuArray = record.allAvus.map( (id) => {
+                    FSArray = record.allFSs.map( (id) => {
                         return (cb) => {
                             // console.log(id);
-                            serveAvu.getAVU(id, cb);
+                            serveFS.getFS(id, cb);
                         }
                     });
 
-                    parallel(avuArray, (err, results) => {
+                    parallel(FSArray, (err, results) => {
                         // sort the array based on avu.nextDateToCheck value
                         // if (results.length > 1)
                         //     results.sort(compareDate);
 
-                        // save the sorted array to avus[]
+                        // save the sorted array to FSs[]
                         results.forEach((result) => {
-                            avus.push(result);
+                            FSs.push(result);
                         });
                         allcb();
                     });
@@ -87,8 +87,8 @@ function parseHome(callback) {
 
                     parallel(fanArray, (err, results) => {
                         // sort the array based on fan.nextDateToCheck value
-                        // if (results.length > 1)
-                        //     results.sort(compareDate);
+                        if (results.length > 1)
+                            results.sort(compareDate);
                         // save the sorted array to fans[]
                         results.forEach((result) => {
                             fans.push(result);
@@ -123,9 +123,9 @@ function parseHome(callback) {
         }
 
         parallel(allArray, (err, result) => {
-            // console.log(avus);
+            // console.log(FSs);
             // console.log(fans);
-            callback(null, {buildings: buildings, avus: avus, fans: fans});
+            callback(null, {buildings: buildings, FSs: FSs, fans: fans});
         });
     });
 }
@@ -144,11 +144,11 @@ function removeBuildingFromList(buildingId, callback) {
     });
 }
 
-function removeAvuFromList(avuId, callback) {
+function removeFSFromList(FsId, callback) {
     serveHome.getHomeContent((err, homeContent) => {
-        let avuIndex = homeContent.allAvus.indexOf(avuId);
-        if (avuIndex > -1) {
-            homeContent.allAvus.splice(avuIndex, 1);
+        let FSIndex = homeContent.allFSs.indexOf(FsId);
+        if (FSIndex > -1) {
+            homeContent.allFSs.splice(FSIndex, 1);
         }
         serveHome.editHomeContent(homeContent, homeContent._id, callback);
     });
@@ -169,19 +169,19 @@ function dailyColorUpdate(callback) {
         if (homeRecord.colorCheckDate.getDay() !== new Date().getDay()) {
             //get info
             parseHome( (err, info) => {
-                let allArray = [], avuArray = [], fanArray = [];
+                let allArray = [], FSArray = [], fanArray = [];
 
-                //update status color of AVUs
+                //update status color of FSs
                 allArray.push( (allcb) => {
-                    avuArray = info.avus.map( (avu) => {
+                    FSArray = info.FSs.map( (FS) => {
                         return (cb) => {
-                            avu.statusColor = serveColor.getStatusColor(avu.nextDateToCheck, avu.lastDateMaintained);
-                            serveAvu.editAVU(avu, avu._id, cb);
+                            FS.statusColor = serveColor.getStatusColor(FS.nextDateToCheck, FS.lastDateMaintained);
+                            serveFS.editFS(FS, FS._id, cb);
                         }
                     });
 
-                    parallel(avuArray, (err, results) => {
-                        if (err) console.error("Error in dailyColorUpdate in AVUs..." + err);
+                    parallel(FSArray, (err, results) => {
+                        if (err) console.error("Error in dailyColorUpdate in FSs..." + err);
                         allcb();
                     });
                 });
@@ -216,6 +216,6 @@ function dailyColorUpdate(callback) {
 module.exports = {
     parseHome: parseHome,
     removeBuildingFromList: removeBuildingFromList,
-    removeAvuFromList: removeAvuFromList,
+    removeFSFromList: removeFSFromList,
     removeFanFromList: removeFanFromList
 };

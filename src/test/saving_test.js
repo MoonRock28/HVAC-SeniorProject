@@ -2,14 +2,14 @@ const chai = require('chai');
 const Building = require('../models/building');
 const Fan = require('../models/fan');
 const Belt = require('../models/belt');
-const AVU = require('../models/AVUs');
+const FS = require('../models/filtrationSystem');
 const Filter = require('../models/filter');
 const mongoose = require('mongoose');
 
 //describe tests
 describe('Saving records ', function () {
     beforeEach( (done) => {
-      mongoose.connection.collections.avus.drop( () => {
+      mongoose.connection.collections.FSs.drop( () => {
         mongoose.connection.collections.filters.drop( () => {
           done();
         });
@@ -20,7 +20,7 @@ describe('Saving records ', function () {
     it('Save a record to the database', (done) => {
       let Hart = new Building({
         name: 'Hart',
-        //AVUs: [{ name: 'AHU 1', statusColor: 'green', additionalNotes: 'This is the first item.'}],
+        //FSs: [{ name: 'AHU 1', statusColor: 'green', additionalNotes: 'This is the first item.'}],
         numBlack: 3,
         numRed: 4
       });
@@ -32,29 +32,33 @@ describe('Saving records ', function () {
     });
     //next test
 
-    it('Add an AVU to the building', (done) => {
-      let avu2 = new AVU({
+    it('Add a Filtration System to the building', (done) => {
+      let FS2 = new FS({
         name: 'AHU 2',
         statusColor: 'yellow',
         additionalNotes: 'second item'
       });
       let taylor = new Building({
         name: 'Taylor',
-        AVUs: [avu2.ObjectId],
+        FSs: [FS2.ObjectId],
         numBlack: 3,
         numRed: 5
       });
-      avu2.save();
-      let avu = new AVU({name: 'AHU 1', statusColor: 'green', additionalNotes: 'first AVU in list'});
+      FS2.save();
+      let myFS = new FS({
+          name: 'AHU 1',
+          statusColor: 'green',
+          additionalNotes: 'first AVU in list'
+      });
 
       taylor.save().then( () => {
         Building.findOne({name: 'Taylor'}).then( (record) => {
-          record.AVUs.push(avu.ObjectId);
-          avu.save();
+          record.FSs.push(myFS.ObjectId);
+          myFS.save();
           record.save().then( () => {
             Building.findOne({name: 'Taylor'}).then( (result) => {
-              //console.log(result.AVUs.length);
-              chai.assert(result.AVUs.length === 2);
+              //console.log(result.FSs.length);
+              chai.assert(result.FSs.length === 2);
               done();
             });
           });
@@ -83,7 +87,7 @@ describe('Saving records ', function () {
           fan2.save();
           record.save().then( () => {
             Building.findOne({name: 'Taylor'}).then( (result) => {
-              //console.log(result.AVUs.length);
+              //console.log(result.FSs.length);
               chai.assert(result.fans.length === 2);
               done();
             });
@@ -92,7 +96,7 @@ describe('Saving records ', function () {
       });
     });
 
-    it('Add a filter to an AVU', (done) => {
+    it('Add a filter to a Filtration System', (done) => {
       let pFilter = new Filter({
         width: 20,
         height: 24,
@@ -105,7 +109,7 @@ describe('Saving records ', function () {
         depth: 12,
         amount: 12
       });
-      let avu = new AVU({
+      let thisFS = new FS({
         name: 'AHU 3',
         primaryFilters: [pFilter],
         secondaryFilters: [sFilter],
@@ -115,8 +119,8 @@ describe('Saving records ', function () {
       pFilter.save();
       sFilter.save();
 
-      avu.save().then( () => {
-        AVU.findOne({name: 'AHU 3'}).then( (record) => {
+      thisFS.save().then( () => {
+        FS.findOne({name: 'AHU 3'}).then( (record) => {
           let newPFilter = new Filter({width: 12, height: 24, depth: 2, amount: 6});
           let newSFilter = new Filter({width: 12, height: 24, depth: 8, amount: 6});
           record.primaryFilters.push(newPFilter);
@@ -124,7 +128,7 @@ describe('Saving records ', function () {
           newPFilter.save();
           newSFilter.save();
           record.save().then( () => {
-            AVU.findOne({name: 'AHU 3'}).then( (result) => {
+            FS.findOne({name: 'AHU 3'}).then( (result) => {
               chai.assert((result.primaryFilters.length === 2) && (result.secondaryFilters.length === 2));
               done();
             });

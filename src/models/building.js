@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const BuildingSchema = new Schema({
     name: String,
     coordinates: {lat: Number, lng: Number},
-    AVUs: [{ type: Schema.Types.ObjectId,  ref: 'AVU'}],
+    FSs: [{ type: Schema.Types.ObjectId,  ref: 'FS'}],
     fans: [{ type: Schema.Types.ObjectId,  ref: 'Fan'}],
     numBlack: Number,
     numRed: Number

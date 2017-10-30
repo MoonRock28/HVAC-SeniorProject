@@ -1,9 +1,9 @@
 'use strict';
-const handleAvu = require('./avuHandler');
+const handleFS = require('./FSHandler');
 const handleFan = require('./fanHandler');
 const buildingService = require('../services/serveBuilding');
 const homeContent = require('../services/serveHomeContent');
-const serveAvu = require('../services/serveAvu');
+const serveFS = require('../services/serveFS');
 const serveFan = require('../services/serveFan');
 // const serveMap = require('../services/serveMap');
 const parallel = require('async').parallel;
@@ -32,23 +32,23 @@ function saveBuilding(body, callback){
 
 function getBuildingInfo(objectId, callback) {
     buildingService.getBuilding(objectId, (err, record) => {
-        let avuArray = [], fanArray= [], allArray = [];
-        let avus = [], fans = [];
+        let FSArray = [], fanArray= [], allArray = [];
+        let FSs = [], fans = [];
 
-        if (record.AVUs !== undefined) {
+        if (record.FSs !== undefined) {
             allArray.push( (allcb) => {
-                avuArray = record.AVUs.map( (id) => {
+                FSArray = record.FSs.map( (id) => {
                     return (cb) => {
-                        serveAvu.getAVU(id, cb);
+                        serveFS.getFS(id, cb);
                     }
                 });
 
-                parallel(avuArray, (err, results) => {
+                parallel(FSArray, (err, results) => {
                     //sort the array based on avu.nextDateToCheck value
                     results.sort(compareDate);
-                    // save the sorted array to avus[]
+                    // save the sorted array to FSs[]
                     results.forEach( (result) => {
-                        avus.push(result)
+                        FSs.push(result)
                     });
                     allcb();
                 });
@@ -85,7 +85,7 @@ function getBuildingInfo(objectId, callback) {
 
         parallel(allArray, (err, results) => {
             if (err) console.error(err);
-            callback(null, {building: record, avus: avus, fans: fans})
+            callback(null, {building: record, FSs: FSs, fans: fans})
         });
     });
 }
@@ -94,9 +94,9 @@ function updateColorNums (objectId, callback) {
     getBuildingInfo(objectId, (err, info) => {
         let numBlack = 0, numRed = 0;
 
-        info.avus.forEach( (avu) => {
-            if (avu.statusColor === 'black') numBlack++;
-            else if (avu.statusColor === 'red') numRed++;
+        info.FSs.forEach( (FS) => {
+            if (FS.statusColor === 'black') numBlack++;
+            else if (FS.statusColor === 'red') numRed++;
         });
 
         info.fans.forEach( (fan) => {
@@ -115,9 +115,9 @@ function removeBuilding (buildingId, callback) {
     buildingService.getBuilding(buildingId, (err, buildingRecord) => {
         let functionArray = [];
 
-        buildingRecord.AVUs.forEach( (avuId) => {
+        buildingRecord.FSs.forEach( (FSId) => {
             functionArray.push( (cb) => {
-                return handleAvu.deleteAVU(avuId, cb);
+                return handleFS.deleteFS(FSId, cb);
             });
         });
 
@@ -133,11 +133,11 @@ function removeBuilding (buildingId, callback) {
     });
 }
 
-function removeAvuFromList (buildingId, avuId, callback) {
+function removeFSFromList (buildingId, FSId, callback) {
     buildingService.getBuilding(buildingId, (err, buildingRecord) => {
-        let avuIndex = buildingRecord.AVUs.indexOf(avuId);
-        if(avuIndex > -1) {
-            buildingRecord.AVUs.splice(avuIndex, 1);
+        let FSIndex = buildingRecord.FSs.indexOf(FSId);
+        if(FSIndex > -1) {
+            buildingRecord.FSs.splice(FSIndex, 1);
         }
         buildingService.editBuilding(buildingRecord, buildingId, (err, result) => {
             updateColorNums(buildingId, callback);
@@ -162,6 +162,6 @@ module.exports = {
     getBuildingInfo: getBuildingInfo,
     updateColorNums: updateColorNums,
     removeBuilding: removeBuilding,
-    removeAvuFromList: removeAvuFromList,
+    removeFSFromList: removeFSFromList,
     removeFanFromList: removeFanFromList
 };

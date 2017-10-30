@@ -1,17 +1,17 @@
 'use strict';
 const buildingService = require('../services/serveBuilding');
 const homeContent = require('../services/serveHomeContent');
-const avuService = require('../services/serveAvu');
+const FSService = require('../services/serveFS');
 const filterService = require('../services/serveFilter');
 // const serveMap = require('../services/serveMap');
 const colorService = require('../services/serveColor');
 const parallel = require('async').parallel;
 
-function saveAVU(body, callback) {
+function saveFS(body, callback) {
     let functionArray = [];
     let lastDate = new Date();
     let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
-    let newAvu = {
+    let newFS = {
         name: body.name,
         coordinates: {lat: body.lat, lng: body.lng},
         buildingName: body.buildingName,
@@ -25,10 +25,10 @@ function saveAVU(body, callback) {
     };
     //console.log(JSON.stringify(newAvu, null, 4));
 
-    avuService.newAVU(newAvu, (err, objectId) => {
+    FSService.newFS(newFS, (err, objectId) => {
         functionArray.push( (cb) => {
             homeContent.getHomeContent( (err, homeRecord) => {
-                homeRecord.allAvus.push(objectId);
+                homeRecord.allFSs.push(objectId);
                 homeContent.editHomeContent(homeRecord, homeRecord._id, (err) => {
                     cb(null, objectId);
                 });
@@ -36,7 +36,7 @@ function saveAVU(body, callback) {
         });
         functionArray.push( (cb) => {
             buildingService.getBuilding(body.buildingId, (err, buildingRecord) => {
-                buildingRecord.AVUs.push(objectId);
+                buildingRecord.FSs.push(objectId);
                 buildingService.editBuilding(buildingRecord, buildingRecord._id, cb);
             });
         });
@@ -48,26 +48,26 @@ function saveAVU(body, callback) {
     });
 }
 
-function deleteAVU(avuId, callback) {
-    avuService.getAVU(avuId, (err, avuRecord) => {
+function deleteFS(FsId, callback) {
+    FSService.getFS(FsId, (err, FsRecord) => {
         let functionArray = [];
 
-        if (avuRecord.primaryFilters !== null) {
-            avuRecord.primaryFilters.forEach((filterId) => {
+        if (FsRecord.primaryFilters !== null) {
+            FsRecord.primaryFilters.forEach((filterId) => {
                 functionArray.push((cb) => {
                     return filterService.deleteFilter(filterId, cb);
                 });
             });
         }
-        if (avuRecord.secondaryFilters !== null) {
-            avuRecord.secondaryFilters.forEach((filterId) => {
+        if (FsRecord.secondaryFilters !== null) {
+            FsRecord.secondaryFilters.forEach((filterId) => {
                 functionArray.push((cb) => {
                     return filterService.deleteFilter(filterId, cb);
                 });
             });
         }
-        if (avuRecord.extraFilters !== null) {
-            avuRecord.extraFilters.forEach((filterId) => {
+        if (FsRecord.extraFilters !== null) {
+            FsRecord.extraFilters.forEach((filterId) => {
                 functionArray.push((cb) => {
                     return filterService.deleteFilter(filterId, cb);
                 });
@@ -76,21 +76,21 @@ function deleteAVU(avuId, callback) {
 
         parallel(functionArray, (err, results) => {
             if(err) console.error("Error in deleting Filters...\n" + err);
-            avuService.deleteAVU(avuId, callback);
+            FSService.deleteFS(FsId, callback);
         });
     });
 
 }
 
-function getAvuInfo(objectId, callback) {
-    avuService.getAVU(objectId, (err, avuRecord) => {
+function getFsInfo(objectId, callback) {
+    FSService.getFS(objectId, (err, FsRecord) => {
         let primaries = [],
             secondaries = [],
             extras = [],
             allArray = [],
-            primary = avuRecord.primaryFilters,
-            secondary = avuRecord.secondaryFilters,
-            extra = avuRecord.extraFilters;
+            primary = FsRecord.primaryFilters,
+            secondary = FsRecord.secondaryFilters,
+            extra = FsRecord.extraFilters;
 
         allArray.push( (allcb) => {
             let functionArray = primary.map( (id) => {
@@ -148,36 +148,36 @@ function getAvuInfo(objectId, callback) {
 
         parallel(allArray, (err) => {
             if(err) console.error(err);
-            callback(null, {current: avuRecord, primary: primaries, secondary: secondaries, extra: extras});
+            callback(null, {current: FsRecord, primary: primaries, secondary: secondaries, extra: extras});
         });
     });
 }
 
-function quickUpdate(nextDate, avuId, callback) {
-    avuService.getAVU(avuId, (err, record) => {
+function quickUpdate(nextDate, FsId, callback) {
+    FSService.getFS(FsId, (err, record) => {
         record.nextDateToCheck = nextDate;
         record.lastDateMaintained = new Date();
         record.statusColor = colorService.getStatusColor(nextDate, record.lastDateMaintained);
         console.log("statusColor updated to " + record.statusColor);
-        avuService.editAVU(record, avuId, callback);
+        FSService.editFS(record, FsId, callback);
     })
 }
 
-function updateAvu(body, callback) {
-    avuService.getAVU(body._id, (err, record) => {
+function updateFs(body, callback) {
+    FSService.getFS(body._id, (err, record) => {
         record.name = body.name;
         record.floor = body.floor;
         record.mechanicalRoom = body.mechanicalRoom;
         record.additionalNotes = body.additionalNotes;
         record.coordinates = {lat: body.lat, lng: body.lng};
-        avuService.editAVU(record, body._id, callback);
+        FSService.editFS(record, body._id, callback);
     });
 }
 
 module.exports = {
-    saveAVU: saveAVU,
-    deleteAVU: deleteAVU,
-    getAvuInfo: getAvuInfo,
+    saveFS: saveFS,
+    deleteFS: deleteFS,
+    getFsInfo: getFsInfo,
     quickUpdate: quickUpdate,
-    updateAvu: updateAvu
+    updateFs: updateFs
 };

@@ -14,7 +14,7 @@ function editHomeContent(home, objectId, callback) {
     Home.findOne({_id: objectId}).then( (record) => {
         // console.log(home);
         record.buildings = home.buildings;
-        record.allAvus = home.allAvus;
+        record.allFSs = home.allFSs;
         record.allFans = home.allFans;
         record.colorCheckDate = home.colorCheckDate;
         record.save().then( () => {
@@ -31,7 +31,7 @@ function editHomeContent(home, objectId, callback) {
 function newHomeContent(home, callback) {
     let thisHome = new Home({
         buildings: home.buildings,
-        allAvus: home.allAvus,
+        allAvus: home.allFSs,
         allFans: home.allFans,
         colorCheckDate: home.colorCheckDate
     });

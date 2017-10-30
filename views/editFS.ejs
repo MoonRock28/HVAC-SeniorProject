@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Edit <%= current.name%></title>
+        <style>
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                        "header"
+                        "nav"
+                        "form";
+            }
+            #header {
+                grid-area: header;
+                color: white;
+            }
+
+            #nav {
+                grid-area: nav;
+                background-color: white;
+            }
+
+            form {
+                grid-area: form;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-areas:
+                        "details map map";
+            }
+
+            #details {
+                grid-area: details;
+                background-color: white;
+            }
+
+            #map {
+                grid-area: map;
+                height: 500px;
+                width: 100%;
+                position: fixed;
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Stewardship Manager</h1>
+        <h1>Edit <%= current.name%></h1>
+    </div>
+    <div id="nav">
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
+            <li><a href="/FS?id=<%= current._id%>"><%= current.name%></a></li>
+        </ul>
+    </div>
+
+    <form action="/updateFS" method="post">
+        <div id="details">
+            <p>Name:<br>
+                <input type="text" name="name" value="<%= current.name%>"></p>
+            <p>Floor:<br>
+                <input type="text" name="floor" value="<%= current.floor%>"></p>
+            <p>Mechanical Room:<br>
+                <input type="text" name="mechanicalRoom" value="<%= current.mechanicalRoom%>"></p>
+            <p>Additional Notes:<br>
+                <input type="text" name="additionalNotes" value="<%= current.additionalNotes%>"></p>
+            <input type="hidden" name="buildingId" value="<%= current.buildingId%>" />
+            <input type="hidden" name="buildingName" value="<%= current.buildingName%>" />
+            <input type="hidden" name="_id" value="<%= current._id%>" />
+            <input type="submit" value="Save Filtration System"/>
+        </div>
+        <div id="map"></div>
+        <script type="text/javascript">
+            let map, marker = undefined, FSCenter = [];
+            function initMap() {
+                FSCenter.push(<%- JSON.stringify(current.coordinates)%>);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: FSCenter[0],
+                    zoom: 19
+                });
+
+                marker = new google.maps.Marker({
+                    position: FSCenter[0],
+                    map: map
+                });
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    placeMarker(event.latLng);
+                });
+            }
+            function placeMarker(location) {
+                if (marker !== undefined) {
+                    marker.setMap(null);
+                    marker = undefined;
+                }
+
+    //                    console.log(JSON.stringify(location));
+
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                map.setCenter(location);
+
+    //                    console.log(location.lat());
+                document.getElementById('formMapLat').value = location.lat() ;
+                document.getElementById('formMapLng').value = location.lng() ;
+
+            }
+        </script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+                async defer></script>
+        <input type="hidden" id="formMapLat" name="lat" value="<%= current.coordinates.lat %>" />
+        <input type="hidden" id="formMapLng" name="lng" value="<%= current.coordinates.lng %>" />
+
+    </form>
+
+
+    <!--<div id="footer">-->
+
+    <!--</div>-->
+    </div>
+    </body>
+</html>

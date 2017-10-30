@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 require('./routes/buildings')(app);
-require('./routes/avus')(app);
+require('./routes/fs')(app);
 require('./routes/fans')(app);
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost/HVAC');
 
 mongoose.connection.on('open', () => {
     console.log('connection to mongoDB has been established...');
-    Home.findOneOrCreate({}, {buildings: [], avus: [], fans: [], colorCheckDate: new Date()}, (err, record) => {
+    Home.findOneOrCreate({}, {buildings: [], FSs: [], fans: [], colorCheckDate: new Date()}, (err, record) => {
         console.log('Home Content Found...');
     });
 });

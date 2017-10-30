@@ -5,34 +5,82 @@
         <!--<script src="../src/assets/homeMap.js"></script>-->
         <title>Home</title>
         <style>
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                "header header header header header header"
+                "nav nav nav nav nav nav"
+                "buildings fss fans map map map"
+                "buildings fss fans map map map"
+                "buildings fss fans map map map"
+                "footer footer footer footer footer footer";
+            }
+            #header {
+                grid-area: header;
+                color: white;
+            }
+            #nav {
+                grid-area: nav;
+                background-color: white;
+            }
+            #buildings {
+                grid-area: buildings;
+                background-color: white;
+            }
+            #FSs {
+                grid-area: fss;
+                background-color: white;
+                /*display: grid;*/
+                /*grid-gap: 5px;*/
+            }
+
+            #fans {
+                grid-area: fans;
+                background-color: white;
+
+            }
+
             #map {
-                height: 800px;
-                width: 800px;
+                background-color: white;
+                grid-area: map;
+                width: 100%;
                 position: fixed;
                 overflow: auto;
             }
-            html, body {
+            #footer {
+                grid-area: footer;
+                background-color: white;
+            }
+            body {
                 height: 100%;
-                margin: 0%;
-                padding: 0%;
+
             }
         </style>
     </head>
     <body>
-        <div id="header">
-            <img src=""/>
-            <h1>HVAC Stewardship Manager</h1>
-            <h1>Home</h1>
-        </div>
-        <div id="nav">
-            <ul>
-                <li><a href="/home">Home</a></li>
-                <li><a href="/createBuilding">New Building</a></li>
-            </ul>
-        </div>
+        <div class="gridWrapper">
+            <div id="header">
+                <img src=""/>
+                <h1>HVAC Inventory Manager</h1>
+                <h1>Home</h1>
+            </div>
 
-            <h4>Campus Map:</h4>
-            <div id="map"></div>
+            <div id="nav">
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/createBuilding">New Building</a></li>
+                </ul>
+            </div>
+
+            <div id="map">
+                <h4>Campus Map:</h4>
+            </div>
             <script type="text/javascript">
                 let map;
                 let buildings = [], markers = [];
@@ -92,11 +140,11 @@
                 }
             </script>
             <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=<MYKEY>&v=3&callback=initMap"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
                     async defer></script>
             <div id="buildings">
                 <h4>Buildings:</h4>
-            <% buildings.forEach( (building) => {%>
+                <% buildings.forEach( (building) => {%>
                 <div class="building">
                     <a href="/building?id=<%= building._id.toString()%>">
                         <p><%= building.name%><br>
@@ -105,20 +153,23 @@
                         </p>
                     </a>
                 </div>
-            <% });%>
+                <% });%>
             </div>
-            <div id="avus">
-                <h4>Air Ventilation Units:</h4>
-            <% avus.forEach( (avu) => {%>
-                <div class="avu">
-                    <a href="/avu?id=<%= avu._id.toString()%>">
-                        <p>Name: <%= avu.name%><br>
-                        Next Date To Check: <%= avu.nextDateToCheck.toDateString()%><br>
-                        Status Color: <%= avu.statusColor%></p>
+
+            <div id="FSs">
+                <h4>Filtration Systems:</h4>
+            <% FSs.forEach( (thisFS) => {%>
+                <div class="FS">
+                    <a href="/FS?id=<%= thisFS._id.toString()%>">
+                        <p style="border: 3px solid <%= thisFS.statusColor%>">
+                            Name: <%= thisFS.name%><br>
+                        Check On: <%= thisFS.nextDateToCheck.toDateString()%><br>
+                        Status Color: <%= thisFS.statusColor%></p>
                     </a>
                 </div>
             <%})%>
             </div>
+
             <div id="fans">
                 <h4>Fans:</h4>
             <% if (fans.length < 10) {length = fans.length;} else {length = 10;}
@@ -126,15 +177,16 @@
                 <div class="fan">
                     <a href="/fan?id=<%= fans[i]._id.toString()%>">
                         <p>Name: <%= fans[i].name%><br>
-                            Next Date To Check: <%= fans[i].nextDateToCheck.toDateString()%><br>
+                            Check On: <%= fans[i].nextDateToCheck.toDateString()%><br>
                             Status Color: <%= fans[i].statusColor%></p>
                     </a>
                 </div>
             <%}%>
             </div>
 
-        <div id="footer">
-
+            <div id="footer">
+                <p>In the footer...</p>
+            </div>
         </div>
     </body>
 </html>
