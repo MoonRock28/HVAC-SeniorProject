@@ -5,21 +5,33 @@
         <style>
             .gridWrapper {
                 display: grid;
-                grid-template-columns: repeat(5, 1fr);
+                grid-template-columns: repeat(6, 1fr);
                 grid-gap: 10px;
                 background-color: #0076c6;
-                width: 960px;
+                /*width: 960px;*/
                 margin: 0 auto;
                 border: 10px solid #0076c6;
                 grid-template-areas:
-                "header header header header header"
-                "nav nav nav nav nav"
-                "details addFilters map map map"
-                "details addFilters map map map"
-                "details addFilters map map map"
-                "footer footer footer footer footer";
+                        "header header header header header header"
+                        "nav nav nav nav nav nav"
+                        "details details details details details details"
+                        "addFilters addFilters addFilters addFilters addFilters addFilters"
+                        "map map map map map ."
+                        "footer footer footer footer footer footer";
             }
 
+            @media screen and (min-width: 960px) {
+                .gridWrapper {
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    grid-gap: 10px;
+                    background-color: #0076c6;
+                    width: 960px;
+                    margin: 0 auto;
+                    border: 10px solid #0076c6;
+                    grid-template-areas: "header header header header header" "nav nav nav nav nav" "details addFilters map map map" "details addFilters map map map" "details addFilters map map map" "footer footer footer footer footer";
+                }
+            }
             #header {
                 grid-area: header;
                 color: white;
@@ -44,6 +56,7 @@
                 background-color: white;
                 grid-area: map;
                 width: 100%;
+                min-height: 400px;
                 position: fixed;
                 overflow: auto;
             }
@@ -63,7 +76,7 @@
         <div class="gridWrapper">
             <div id="header">
                 <img src=""/>
-                <h1>HVAC Stewardship Manager</h1>
+                <h1>HVAC Inventory Manager</h1>
                 <h1>Filtration System: <%= current.name%></h1>
             </div>
             <div id="nav">

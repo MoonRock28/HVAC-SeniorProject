@@ -8,13 +8,26 @@
                 grid-template-columns: 1fr;
                 grid-gap: 10px;
                 background-color: #0076c6;
-                width: 960px;
+                /*width: 960px;*/
                 margin: 0 auto;
                 border: 10px solid #0076c6;
                 grid-template-areas:
                         "header"
                         "nav"
                         "form";
+            }
+
+            @media screen and (min-width: 960px) {
+                .gridWrapper {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-gap: 10px;
+                    background-color: #0076c6;
+                    width: 960px;
+                    margin: 0 auto;
+                    border: 10px solid #0076c6;
+                    grid-template-areas: "header" "nav" "form";
+                }
             }
 
             #header {
@@ -31,9 +44,20 @@
                 grid-area: form;
                 display: grid;
                 grid-gap: 10px;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(6, 1fr);
                 grid-template-areas:
-                        "details map map";
+                        "details details details details details details"
+                        "map map map map map .";
+            }
+
+            @media screen and (min-width: 760px) {
+                form {
+                    grid-area: form;
+                    display: grid;
+                    grid-gap: 10px;
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-areas: "details map map";
+                }
             }
 
             #details {
@@ -43,8 +67,8 @@
 
             #map {
                 grid-area: map;
-                height: 500px;
                 width: 100%;
+                min-height: 400px;
                 position: fixed;
                 overflow: auto;
             }
@@ -54,7 +78,7 @@
     <div class="gridWrapper">
         <div id="header">
             <img src=""/>
-            <h1>HVAC Stewardship Manager</h1>
+            <h1>HVAC Inventory Manager</h1>
             <h1>Edit <%= current.name%></h1>
         </div>
         <div id="nav">
@@ -132,9 +156,9 @@
 
         </form>
 
-        <div id="footer">
+        <!--<div id="footer">-->
 
-        </div>
+        <!--</div>-->
     </div>
     </body>
 </html>
