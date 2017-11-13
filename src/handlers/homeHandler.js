@@ -62,8 +62,8 @@ function parseHome(callback) {
 
                     parallel(FSArray, (err, results) => {
                         // sort the array based on avu.nextDateToCheck value
-                        // if (results.length > 1)
-                        //     results.sort(compareDate);
+                        if (results.length > 1)
+                            results.sort(compareDate);
 
                         // save the sorted array to FSs[]
                         results.forEach((result) => {
@@ -166,7 +166,9 @@ function removeFanFromList(fanId, callback) {
 
 function dailyColorUpdate(callback) {
     serveHome.getHomeContent( (err, homeRecord) => {
-        if (homeRecord.colorCheckDate.getDay() !== new Date().getDay()) {
+        // console.log(homeRecord.colorCheckDate);
+        // console.log(new Date());
+        if (homeRecord.colorCheckDate.getDate() !== new Date().getDate()) {
             //get info
             parseHome( (err, info) => {
                 let allArray = [], FSArray = [], fanArray = [];
@@ -203,11 +205,19 @@ function dailyColorUpdate(callback) {
 
                 parallel(allArray, (err, results) => {
                     if (err) console.error("Error in updating colors..." + err);
-                    callback(true);
+
+                    homeRecord.colorCheckDate = new Date();
+                    serveHome.editHomeContent(homeRecord, (err) => {
+                        if (err) console.error("Error in updating homeRecord.colorCheckDate...");
+                        // console.log(objectId);
+                        console.log("\t\t\tColor Update Completed...");
+                        callback(true)
+                    });
+                    // callback(true);
                 });
             });
         } else {
-            console.log("Color Update not needed...");
+            console.log("\t\t\tColor Update not needed...");
             callback(false);
         }
     });
@@ -217,5 +227,6 @@ module.exports = {
     parseHome: parseHome,
     removeBuildingFromList: removeBuildingFromList,
     removeFSFromList: removeFSFromList,
-    removeFanFromList: removeFanFromList
+    removeFanFromList: removeFanFromList,
+    dailyColorUpdate: dailyColorUpdate
 };

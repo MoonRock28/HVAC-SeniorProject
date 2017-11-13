@@ -10,8 +10,8 @@ function getHomeContent(callback) {
     });
 }
 
-function editHomeContent(home, objectId, callback) {
-    Home.findOne({_id: objectId}).then( (record) => {
+function editHomeContent(home, callback) {
+    Home.findOne({}).then( (record) => {
         // console.log(home);
         record.buildings = home.buildings;
         record.allFSs = home.allFSs;
@@ -19,7 +19,7 @@ function editHomeContent(home, objectId, callback) {
         record.colorCheckDate = home.colorCheckDate;
         record.save().then( () => {
             console.log('Home Content Updated...');
-            callback(null, objectId);
+            callback(null);
         }).catch((err) => {
             console.log(err);
         });

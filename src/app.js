@@ -31,7 +31,10 @@ app.use('/assets', express.static('assets'));
 // app.use(express.static(path.join(__dirname, 'assets')));
 
 app.get('/', (req, res) => {
-    res.render('login');
+    handleHome.dailyColorUpdate( (err, successful) => {
+        res.render('login');
+    });
+//    res.render('login');
 });
 
 app.post('/login', urlEncodedParser, (req, res) => {
