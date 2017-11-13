@@ -14,8 +14,8 @@
                 grid-template-areas:
                         "header header header header header header"
                         "nav nav nav nav nav nav"
-                        "details details details details details details"
-                        "addBelts addBelts addBelts addBelts addBelts addBelts"
+                        "details details details details details ."
+                        "addBelts addBelts addBelts addBelts addBelts ."
                         "map map map map map ."
                         "footer footer footer footer footer footer";
             }
@@ -52,6 +52,8 @@
             #details {
                 grid-area: details;
                 background-color: white;
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #addBelts {
@@ -124,7 +126,7 @@
                 <h3>Extra Belts:</h3>
                 <% extras.forEach( (belt) => {%>
                 <div class="belt">
-                    <p> Type: <%= belt.type%>
+                    <p> Type: <%= belt.type%><br>
                         Amount: <%= belt.amount%><br>
                         <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
                     </p>

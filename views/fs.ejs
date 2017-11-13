@@ -14,8 +14,8 @@
                 grid-template-areas:
                         "header header header header header header"
                         "nav nav nav nav nav nav"
-                        "details details details details details details"
-                        "addFilters addFilters addFilters addFilters addFilters addFilters"
+                        "details details details details details ."
+                        "addFilters addFilters addFilters addFilters addFilters ."
                         "map map map map map ."
                         "footer footer footer footer footer footer";
             }
@@ -45,6 +45,8 @@
             #details {
                 grid-area: details;
                 background-color: white;
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #addFilters {

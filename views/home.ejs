@@ -55,18 +55,21 @@
             #buildings {
                 grid-area: buildings;
                 background-color: white;
+                max-height: 800px;
+                overflow-y: auto;
             }
             #FSs {
                 grid-area: fss;
                 background-color: white;
-                /*display: grid;*/
-                /*grid-gap: 5px;*/
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #fans {
                 grid-area: fans;
                 background-color: white;
-
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #map {
@@ -186,9 +189,8 @@
                 <div class="FS">
                     <a href="/FS?id=<%= thisFS._id.toString()%>">
                         <p style="border: 3px solid <%= thisFS.statusColor%>">
-                            Name: <%= thisFS.name%><br>
-                        Check On: <%= thisFS.nextDateToCheck.toDateString()%><br>
-                        Status Color: <%= thisFS.statusColor%></p>
+                            <%= thisFS.name%><br>
+                        Check On: <br><%= thisFS.nextDateToCheck.toDateString()%></p>
                     </a>
                 </div>
             <%})%>
@@ -196,16 +198,15 @@
 
             <div id="fans">
                 <h4>Fans:</h4>
-            <% if (fans.length < 10) {length = fans.length;} else {length = 10;}
-            for(let i = 0; i < length; i++) {%>
+            <% fans.forEach( (thisFan) => {%>
                 <div class="fan">
-                    <a href="/fan?id=<%= fans[i]._id.toString()%>">
-                        <p>Name: <%= fans[i].name%><br>
-                            Check On: <%= fans[i].nextDateToCheck.toDateString()%><br>
-                            Status Color: <%= fans[i].statusColor%></p>
+                    <a href="/fan?id=<%= thisFan._id.toString()%>">
+                        <p style="border: 3px solid <%= thisFan.statusColor%>">
+                            <%= thisFan.name%><br>
+                            Check On: <br><%= thisFan.nextDateToCheck.toDateString()%></p>
                     </a>
                 </div>
-            <%}%>
+            <%});%>
             </div>
 
             <div id="footer">

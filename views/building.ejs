@@ -15,7 +15,7 @@
                         "header header header header header header"
                         "nav nav nav nav nav nav"
                         "details details details details details details"
-                        "fans fans fans FSs FSs FSs"
+                        "fans fans fans FSs FSs ."
                         "map map map map map ."
                         "footer footer footer footer footer footer";
             }
@@ -56,11 +56,15 @@
             #FSs {
                 grid-area: FSs;
                 background-color: white;
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #fans {
                 grid-area: fans;
                 background-color: white;
+                max-height: 800px;
+                overflow-y: auto;
             }
 
             #map {
@@ -195,9 +199,9 @@
                 <h3>Filtration Systems:</h3>
                 <% FSs.forEach( (thisFS) => {%>
                     <a href="/FS?id=<%= thisFS._id%>">
-                        <p><%= thisFS.name%><br>
-                        Status color: <%= thisFS.statusColor%><br>
-                        Next date to check: <%= thisFS.nextDateToCheck.toDateString()%><br>
+                        <p style="border: 3px solid <%= thisFS.statusColor%>">
+                            <%= thisFS.name%><br>
+                            Check on: <br><%= thisFS.nextDateToCheck.toDateString()%>
                         </p>
                     </a>
                 <%})%>
@@ -206,9 +210,9 @@
                 <h3>Fans:</h3>
                 <% fans.forEach( (fan) => {%>
                 <a href="/fan?id=<%= fan._id%>">
-                    <p><%= fan.name%><br>
-                        Status color: <%= fan.statusColor%><br>
-                        Next date to check: <%= fan.nextDateToCheck.toDateString()%><br>
+                    <p style="border: 3px solid <%= fan.statusColor%>">
+                        <%= fan.name%><br>
+                        Check on: <br><%= fan.nextDateToCheck.toDateString()%>
                     </p>
                 </a>
                 <%})%>
