@@ -15,7 +15,7 @@
                         "header header header header header header"
                         "nav nav nav nav nav nav"
                         "details details details details details details"
-                        "fans fans fans FSs FSs ."
+                        "FSs FSs FSs fans fans ."
                         "map map map map map ."
                         "footer footer footer footer footer footer";
             }
@@ -33,8 +33,8 @@
                             "header header header header header"
                             "nav nav nav nav nav"
                             "details details map map map"
-                            "fans FSs map map map"
-                            "fans FSs map map map"
+                            "FSs fans map map map"
+                            "FSs fans map map map"
                             "footer footer footer footer footer";
                 }
             }
@@ -193,7 +193,7 @@
                 }
             </script>
             <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=<>&v=3&callback=initMap"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
                     async defer></script>
             <div id="FSs">
                 <h3>Filtration Systems:</h3>
@@ -219,6 +219,7 @@
             </div>
         <div id="footer">
             <p><a href="/removeBuilding?buildingId=<%= building.id%>">Remove <%= building.name%></a></p>
+            <p><a href="/editBuilding?buildingId=<%= building.id%>">Edit <%= building.name%></a></p>
         </div>
     </div>
     </body>

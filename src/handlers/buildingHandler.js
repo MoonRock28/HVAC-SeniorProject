@@ -157,11 +157,20 @@ function removeFanFromList (buildingId, fanId, callback) {
     });
 }
 
+function editBuilding (body, callback) {
+    buildingService.getBuilding(body._id, (err, record) => {
+        record.name = body.name;
+        record.coordinates = {lat: body.lat, lng: body.lng};
+        buildingService.editBuilding(record, body._id, callback);
+    });
+}
+
 module.exports = {
     saveBuilding: saveBuilding,
     getBuildingInfo: getBuildingInfo,
     updateColorNums: updateColorNums,
     removeBuilding: removeBuilding,
     removeFSFromList: removeFSFromList,
-    removeFanFromList: removeFanFromList
+    removeFanFromList: removeFanFromList,
+    editBuilding: editBuilding
 };

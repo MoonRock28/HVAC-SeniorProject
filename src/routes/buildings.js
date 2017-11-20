@@ -27,9 +27,17 @@ module.exports = (app) => {
         });
     });
 
-    app.post('/editBuilding/:id', (req, res) => {
-        console.log('this is the editBuilding route that reroutes to /building');
-        res.render('building'/*, {buildingContent} */);
+    app.get('/editBuilding', urlEncodedParser, (req, res) => {
+        Building.getBuildingInfo(req.query.buildingId, (err, info) => {
+            //console.log(JSON.stringify(info, null, 4));
+            res.render('editBuilding', info);
+        });
+    });
+
+    app.post('/updateBuilding', urlEncodedParser, (req, res) => {
+        Building.editBuilding(req.body, (err, objectId) => {
+            res.redirect('/building?id=' + objectId.toString());
+        });
     });
 
     app.get('/removeBuilding', (req, res) => {

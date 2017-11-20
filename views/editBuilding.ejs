@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit <%= building.name%></title>
+    <style>
+        .gridWrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+            background-color: #0076c6;
+            /*width: 960px;*/
+            margin: 0 auto;
+            border: 10px solid #0076c6;
+            grid-template-areas:
+                    "header"
+                    "nav"
+                    "form";
+        }
+
+        @media screen and (min-width: 960px) {
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas: "header" "nav" "form";
+            }
+        }
+
+        #header {
+            grid-area: header;
+            color: white;
+        }
+
+        #nav {
+            grid-area: nav;
+            background-color: white;
+        }
+
+        form {
+            grid-area: form;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-areas:
+                    "details details details details details details"
+                    "map map map map map .";
+        }
+
+        @media screen and (min-width: 760px) {
+            form {
+                grid-area: form;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-areas: "details map map";
+            }
+        }
+
+        #details {
+            grid-area: details;
+            background-color: white;
+        }
+
+        #map {
+            grid-area: map;
+            width: 100%;
+            min-height: 400px;
+            position: fixed;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Inventory Manager</h1>
+        <h1>Edit <%= building.name%></h1>
+    </div>
+    <div id="nav">
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/building?id=<%= building._id%>"><%= building.name%></a></li>
+        </ul>
+    </div>
+
+    <form action="/updateBuilding" method="post">
+        <div id="details">
+            <p>Name:<br>
+                <input type="text" name="name" value="<%= building.name%>"></p>
+            <input type="hidden" name="_id" value="<%= building._id%>" />
+            <input type="submit" value="Save Building"/>
+        </div>
+        <div id="map"></div>
+        <script type="text/javascript">
+            let map, marker = undefined, fanCenter = [];
+            function initMap() {
+                fanCenter.push(<%- JSON.stringify(building.coordinates)%>);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: fanCenter[0], //byuIdaho building
+                    zoom: 19
+                });
+
+                marker = new google.maps.Marker({
+                    position: fanCenter[0],
+                    map: map
+                });
+
+                google.maps.event.addListener(map, 'click', function(event) {
+                    placeMarker(event.latLng);
+                });
+            }
+            function placeMarker(location) {
+                if (marker !== undefined) {
+                    marker.setMap(null);
+                    marker = undefined;
+                }
+
+                console.log(JSON.stringify(location));
+
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                map.setCenter(location);
+
+                //                    console.log(location.lat());
+                document.getElementById('formMapLat').value = location.lat() ;
+                document.getElementById('formMapLng').value = location.lng() ;
+
+            }
+        </script>
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+                async defer></script>
+        <input type="hidden" id="formMapLat" name="lat" value="<%= building.coordinates.lat %>" />
+        <input type="hidden" id="formMapLng" name="lng" value="<%= building.coordinates.lng %>" />
+
+    </form>
+
+    <!--<div id="footer">-->
+
+    <!--</div>-->
+</div>
+</body>
