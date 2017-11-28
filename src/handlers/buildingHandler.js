@@ -23,7 +23,7 @@ function saveBuilding(body, callback){
             // console.log(objectId);
             record.buildings.push(objectId);
             // console.log(record.buildings);
-            homeContent.editHomeContent(record, record._id, (err) => {
+            homeContent.editHomeContent(record, (err) => {
                 callback(null, objectId);
             });
         });

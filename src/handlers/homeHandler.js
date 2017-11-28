@@ -136,7 +136,7 @@ function removeBuildingFromList(buildingId, callback) {
         if (index > -1) {
             homeRecord.buildings.splice(index, 1);
         }
-        serveHome.editHomeContent(homeRecord, homeRecord._id, (err) => {
+        serveHome.editHomeContent(homeRecord, (err) => {
             if (err) console.error("Error in removing building from homeRecord" + err);
             callback(null);
         });
@@ -150,7 +150,7 @@ function removeFSFromList(FsId, callback) {
         if (FSIndex > -1) {
             homeContent.allFSs.splice(FSIndex, 1);
         }
-        serveHome.editHomeContent(homeContent, homeContent._id, callback);
+        serveHome.editHomeContent(homeContent, callback);
     });
 }
 
@@ -160,7 +160,7 @@ function removeFanFromList(fanId, callback) {
         if (fanIndex > -1) {
             homeContent.allFans.splice(fanIndex, 1);
         }
-        serveHome.editHomeContent(homeContent, homeContent._id, callback);
+        serveHome.editHomeContent(homeContent, callback);
     });
 }
 

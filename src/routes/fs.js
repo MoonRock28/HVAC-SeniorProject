@@ -56,7 +56,7 @@ module.exports = (app) => {
         FSHandler.quickUpdate(req.body.nextDateToCheck, req.body.FSId, (err) => {
             if (err) console.error('Error in avu quickUpdate...\n' + err);
             handleBuilding.updateColorNums(req.body.buildingId, (err) => {
-                res.redirect(`/FS?id=${req.body.avuId}`);
+                res.redirect(`/FS?id=${req.body.FSId}`);
             });
         });
     });
