@@ -21,7 +21,7 @@ function newFS(fs, callback) {
 }
 
 function editFS(fs, objectId, callback) {
-    FS.findOne({_id: objectId}).then( (record) => {
+    FS.findById(objectId).then( (record) => {
         record.name = fs.name;
         record.coordinates = {lat: fs.coordinates.lat, lng: fs.coordinates.lng};
         record.buildingName = fs.buildingName;

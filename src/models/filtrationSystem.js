@@ -17,6 +17,6 @@ const FSSchema = new Schema({
     additionalNotes: String
 });
 
-const FS = mongoose.model('fs', FSSchema);
+const FS = mongoose.model('FS', FSSchema);
 
 module.exports = FS;
