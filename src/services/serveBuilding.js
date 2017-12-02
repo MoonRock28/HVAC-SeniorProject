@@ -38,7 +38,7 @@ function editBuilding(building, objectId, callback) {
 
 function deleteBuilding(objectId, callback) {
     Building.findOneAndRemove({_id: objectId}).then( () => {
-        console.log('Building has been deleted...');
+        console.log('Building ' + objectId + ' has been deleted...');
         callback(null);
     }).catch((err) => {
         console.log(err);

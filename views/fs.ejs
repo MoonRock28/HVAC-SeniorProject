@@ -40,6 +40,16 @@
             #nav {
                 grid-area: nav;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
+            }
+            .link {
+                background-color: white;
+                border: 3px solid #0076c6;
+                min-height: 30px;
+                text-align: center;
             }
 
             #details {
@@ -66,6 +76,10 @@
             #footer {
                 grid-area: footer;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
             }
             /*html, body {*/
                 /*height: 100%;*/
@@ -82,10 +96,8 @@
                 <h1>Filtration System: <%= current.name%></h1>
             </div>
             <div id="nav">
-                <ul>
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
-                </ul>
+                <a href="/home" class="link">Home</a>
+                <a href="/building?id=<%= current.buildingId%>" class="link"><%= current.buildingName%></a>
             </div>
 
             <div id="details">
@@ -185,8 +197,15 @@
             </div>
 
             <div id="footer">
-                <p><a href="/editFS?FSId=<%= current._id%>&buildingId=<%= current.buildingId%>">Edit <%= current.name%></a></p>
-                <p><a href="/deleteFS?FSId=<%= current._id%>&buildingId=<%= current.buildingId%>">Remove <%= current.name%></a></p>
+                <a href="/editFS?FSId=<%= current._id%>&buildingId=<%= current.buildingId%>" class="link">Edit <%= current.name%></a>
+                <a href="javascript:AlertIt();" class="link">Remove <%= current.name%></a>
+                <script type="text/javascript">
+                    function AlertIt() {
+                        let answer = confirm ("Are you sure you want to delete <%= current.name%>?")
+                        if (answer)
+                            window.location="/deleteFS?FSId=<%= current._id%>&buildingId=<%= current.buildingId%>";
+                    }
+                </script>
             </div>
         </div>
     </body>

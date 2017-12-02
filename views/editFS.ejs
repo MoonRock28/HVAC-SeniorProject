@@ -36,6 +36,16 @@
             #nav {
                 grid-area: nav;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
+            }
+            .link {
+                background-color: white;
+                border: 3px solid #0076c6;
+                min-height: 30px;
+                text-align: center;
             }
 
             form {
@@ -80,11 +90,9 @@
         <h1>Edit <%= current.name%></h1>
     </div>
     <div id="nav">
-        <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/building?id=<%= current.buildingId%>"><%= current.buildingName%></a></li>
-            <li><a href="/FS?id=<%= current._id%>"><%= current.name%></a></li>
-        </ul>
+        <a href="/home" class="link">Home</a>
+        <a href="/building?id=<%= current.buildingId%>" class="link"><%= current.buildingName%></a>
+        <a href="/FS?id=<%= current._id%>" class="link"><%= current.name%></a>
     </div>
 
     <form action="/updateFS" method="post">

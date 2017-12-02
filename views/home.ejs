@@ -51,6 +51,16 @@
             #nav {
                 grid-area: nav;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
+            }
+            .link {
+                background-color: white;
+                border: 3px solid #0076c6;
+                min-height: 30px;
+                text-align: center;
             }
             #buildings {
                 grid-area: buildings;
@@ -99,10 +109,8 @@
             </div>
 
             <div id="nav">
-                <ul>
-                    <li><a href="/home">Home</a></li>
-                    <li><a href="/createBuilding">New Building</a></li>
-                </ul>
+                <a href="/home" class="link">Home</a>
+                <a href="/createBuilding" class="link">New Building</a>
             </div>
 
             <div id="map">
@@ -196,8 +204,8 @@
                 <div class="FS">
                     <a href="/FS?id=<%= thisFS._id.toString()%>">
                         <p style="border: 3px solid <%= thisFS.statusColor%>">
-                            <%= thisFS.name%><br>
-                        Check On: <br><%= thisFS.nextDateToCheck.toDateString()%></p>
+                            <%= thisFS.name%><br><%= thisFS.buildingName%><br>
+                        <%= thisFS.nextDateToCheck.toDateString()%></p>
                     </a>
                 </div>
             <%})%>
@@ -209,8 +217,8 @@
                 <div class="fan">
                     <a href="/fan?id=<%= thisFan._id.toString()%>">
                         <p style="border: 3px solid <%= thisFan.statusColor%>">
-                            <%= thisFan.name%><br>
-                            Check On: <br><%= thisFan.nextDateToCheck.toDateString()%></p>
+                            <%= thisFan.name%><br><%= thisFan.buildingName%><br>
+                            <%= thisFan.nextDateToCheck.toDateString()%></p>
                     </a>
                 </div>
             <%});%>

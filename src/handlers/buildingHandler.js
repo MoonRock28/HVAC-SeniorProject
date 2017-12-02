@@ -2,6 +2,7 @@
 const handleFS = require('./FSHandler');
 const handleFan = require('./fanHandler');
 const buildingService = require('../services/serveBuilding');
+//const handleHome = require('./homeHandler');
 const homeContent = require('../services/serveHomeContent');
 const serveFS = require('../services/serveFS');
 const serveFan = require('../services/serveFan');
@@ -111,24 +112,42 @@ function updateColorNums (objectId, callback) {
     });
 }
 
+// function oneAtATimeFS(buildingRecord, callback) {
+//     buildingRecord.FSs.forEach( (FSId) => {
+//         homeContent.removeFSFromList(FSId, () => {});
+//     });
+// }
+// function oneAtATimeFan(buildingRecord) {
+//
+// }
+
 function removeBuilding (buildingId, callback) {
+    console.log("getting the building info.");
     buildingService.getBuilding(buildingId, (err, buildingRecord) => {
         let functionArray = [];
 
-        buildingRecord.FSs.forEach( (FSId) => {
-            functionArray.push( (cb) => {
-                return handleFS.deleteFS(FSId, cb);
-            });
-        });
 
-        buildingRecord.fans.forEach( (fanId) => {
-            functionArray.push( (cb) => {
-                return handleFan.deleteFan(fanId, buildingId, cb);
-            });
+    buildingRecord.FSs.forEach( (FSId) => {
+        functionArray.push( (cb) => {
+            //console.log("about to delete FS " + FSId);
+            return handleFS.deleteFS(FSId, cb);
         });
+    });
 
-        parallel(functionArray, (err, results) => {
+    buildingRecord.fans.forEach( (fanId) => {
+        functionArray.push( (cb) => {
+            //console.log("about to delete fan " + fanId);
+            return handleFan.deleteFan(fanId, cb);
+        });
+    });
+
+    parallel(functionArray, (err, results) => {
+        homeContent.removeFansFSsFromList(buildingRecord.fans, buildingRecord.FSs, (err) => {
+            if (err) console.log(err);
+            console.log("finished removing FS's and fans' from home.");
+            console.log("about to delete building.");
             buildingService.deleteBuilding(buildingId, callback);
+            });
         });
     });
 }

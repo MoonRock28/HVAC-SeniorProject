@@ -5,8 +5,8 @@ const handleFan = require('../handlers/fanHandler');
 const handleBelt = require('../handlers/beltHandler');
 const handleBuilding = require('../handlers/buildingHandler');
 const handleHome = require('../handlers/homeHandler');
-const serveFan = require('../services/serveFan');
-const serveBelt = require('../services/serveBelt');
+// const serveFan = require('../services/serveFan');
+// const serveBelt = require('../services/serveBelt');
 
 
 module.exports = (app) => {

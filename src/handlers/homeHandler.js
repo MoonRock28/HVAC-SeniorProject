@@ -136,10 +136,11 @@ function removeBuildingFromList(buildingId, callback) {
         if (index > -1) {
             homeRecord.buildings.splice(index, 1);
         }
-        serveHome.editHomeContent(homeRecord, (err) => {
-            if (err) console.error("Error in removing building from homeRecord" + err);
-            callback(null);
-        });
+        console.log("Building " + buildingId + " has been removed from homeContent...");
+        serveHome.editHomeContent(homeRecord, callback);//(err) => {
+        //     if (err) console.error("Error in removing building from homeRecord" + err);
+        //     callback(null);
+        // });
 
     });
 }

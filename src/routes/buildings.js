@@ -41,10 +41,13 @@ module.exports = (app) => {
     });
 
     app.get('/removeBuilding', (req, res) => {
+        console.log("about to call building.removeBuilding()");
         Building.removeBuilding(req.query.buildingId, (err) => {
             if (err) console.error("Error in removing building...\n" + err);
+            console.log("about to call handleHome.removeBuildingFromList()");
             handleHome.removeBuildingFromList(req.query.buildingId, (err) => {
                 if (err) console.error("Error in removing building from homeContent...\n" + err);
+                console.log("about to redirect to home page.");
                 res.redirect('/home');
             });
         });

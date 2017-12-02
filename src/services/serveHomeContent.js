@@ -1,5 +1,6 @@
 'use strict';
 const Home = require('../models/homeContent');
+const parallel = require('async').parallelLimit;
 
 function getHomeContent(callback) {
     Home.findOne({}).then( (record) => {
@@ -51,9 +52,64 @@ function deleteHomeContent(objectId, callback) {
     });
 }
 
+function removeFansFSsFromList(fans, FSs, callback) {
+    let functionArray = [];
+
+    if (fans !== null) {
+        fans.forEach( (fanId) => {
+            functionArray.push( (cb) => {
+                return removeFanFromList(fanId, cb)
+            });
+        });
+    }
+    if (FSs !== null) {
+        FSs.forEach( (FSId) => {
+            functionArray.push( (cb) => {
+                return removeFSFromList(FSId, cb)
+            });
+        });
+    }
+
+    parallel(functionArray, 1, (err, results) => {
+        if (err) console.error("Error in removing FSs and Fans from homeContent...\n" + err);
+        callback(null);
+    });
+}
+
+function removeFSFromList(FSId, callback) {
+    getHomeContent( (err, record) => {
+        let FSIndex = record.allFSs.indexOf(FSId);
+        if (FSIndex > -1) {
+            record.allFSs.splice(FSIndex, 1);
+        }
+
+        record.save().then( (err) => {
+            console.log("FS " + FSId + " has been removed from homeContent...");
+            callback(null);
+        });
+    });
+}
+
+function removeFanFromList(fanId, callback) {
+    getHomeContent( (err, record) => {
+        let fanIndex = record.allFans.indexOf(fanId);
+        if (fanIndex > -1) {
+            record.allFans.splice(fanIndex, 1);
+        }
+
+        record.save().then( (err) => {
+            console.log("Fan " +fanId + " has been removed from homeContent...");
+            callback(null);
+        });
+    });
+}
+
 module.exports = {
     getHomeContent: getHomeContent,
     editHomeContent: editHomeContent,
     newHomeContent: newHomeContent,
-    deleteHomeContent: deleteHomeContent
+    deleteHomeContent: deleteHomeContent,
+    removeFansFSsFromList: removeFansFSsFromList
+    // removeFSFromList: removeFSFromList,
+    // removeFanFromList: removeFanFromList
 };

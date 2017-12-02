@@ -19,7 +19,7 @@ module.exports = (app) => {
         console.log(req.query.buildingId);
         console.log(req.query.buildingName);
         handleBuilding.getBuildingInfo(req.query.buildingId, (err, building) => {
-            console.log(JSON.stringify(building, null, 4));
+            //console.log(JSON.stringify(building, null, 4));
             res.render('newFS', building);
         });
 
@@ -36,8 +36,6 @@ module.exports = (app) => {
                     console.log(`Filtration System Deleted...\n`);
                     res.redirect(`/building?id=${req.query.buildingId}`);
                 });
-                console.log(`Filtration System Deleted...\n`);
-                res.redirect(`/building?id=${req.query.buildingId}`);
             });
         });
     });

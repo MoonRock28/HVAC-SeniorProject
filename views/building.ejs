@@ -46,6 +46,16 @@
             #nav {
                 grid-area: nav;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
+            }
+            .link {
+                background-color: white;
+                border: 3px solid #0076c6;
+                min-height: 30px;
+                text-align: center;
             }
 
             #details {
@@ -79,6 +89,10 @@
             #footer {
                 grid-area: footer;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
             }
             /*html, body {*/
                 /*height: 100%;*/
@@ -95,12 +109,9 @@
             <h1><%= building.name%> Building</h1>
         </div>
         <div id="nav">
-            <ul>
-                <li><a href="/home">Home</a></li>
-                <li><a href="/createFS?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New Filtration System</a></li>
-                <li><a href="/createFan?buildingName=<%= building.name%>&buildingId=<%= building._id%>">New Fan</a></li>
-
-            </ul>
+            <a href="/home" class="link">Home</a>
+            <a href="/createFS?buildingName=<%= building.name%>&buildingId=<%= building._id%>" class="link">New Filtration System</a>
+            <a href="/createFan?buildingName=<%= building.name%>&buildingId=<%= building._id%>" class="link">New Fan</a>
         </div>
 
             <div id="details">
@@ -224,8 +235,15 @@
                 <%})%>
             </div>
         <div id="footer">
-            <p><a href="/removeBuilding?buildingId=<%= building.id%>">Remove <%= building.name%></a></p>
-            <p><a href="/editBuilding?buildingId=<%= building.id%>">Edit <%= building.name%></a></p>
+            <a href="/editBuilding?buildingId=<%= building.id%>" class="link">Edit <%= building.name%></a>
+            <a href="javascript:AlertIt();" class="link">Remove <%= building.name%></a>
+            <script type="text/javascript">
+                function AlertIt() {
+                    let answer = confirm ("This action removes all Filtration Systems and Fans for this building and cannot be recovered. Continue?")
+                    if (answer)
+                        window.location="/removeBuilding?buildingId=<%= building.id%>";
+                }
+            </script>
         </div>
     </div>
     </body>
