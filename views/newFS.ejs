@@ -100,7 +100,7 @@
                     <p>Mechanical Room:<br>
                         <input type="text" name="mechanicalRoom"></p>
                     <p>Next Date To Check:<br>
-                        <input type="date" name="nextDateToCheck"></p>
+                        <input type="date" name="nextDateToCheck" id="checkDate"></p>
                     <p>Additional Notes:<br>
                         <input type="text" name="additionalNotes"></p>
                     <input type="hidden" name="buildingId" value="<%= building._id%>" />
@@ -109,6 +109,8 @@
                 </div>
                 <div id="map"></div>
                 <script type="text/javascript">
+                    let threeMonthMill = new Date().getTime() + 5184000000;
+                    document.getElementById('checkDate').valueAsDate = new Date(threeMonthMill);
                     let map, marker = undefined, buildingCenter = [];
                     function initMap() {
                         buildingCenter.push(<%- JSON.stringify(building.coordinates)%>);

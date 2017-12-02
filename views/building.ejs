@@ -144,6 +144,7 @@
                             map: map,
                             position: thisFS.coordinates,
                             title: thisFS.title,
+                            url: `/fs?id=${thisFS._id}`,
                             animation: google.maps.Animation.DROP,
                             id: i
                         });
@@ -152,7 +153,9 @@
                         bounds.extend(marker.position);
 
                         marker.addListener('click', () => {
-                            populateInfoWindow(this, largeInfowindow);
+                            console.log(marker.url);
+                            window.location.href = marker.url;
+                            //populateInfoWindow(this, largeInfowindow);
                         });
                     });
 
@@ -162,6 +165,7 @@
                             map: map,
                             position: fan.coordinates,
                             title: fan.title,
+                            url: `/fan?id=${fan._id}`,
                             animation: google.maps.Animation.DROP,
                             id: i
                         });
@@ -170,7 +174,9 @@
                         bounds.extend(marker.position);
 
                         marker.addListener('click', () => {
-                            populateInfoWindow(this, largeInfowindow);
+                            console.log(marker.url);
+                            window.location.href = marker.url;
+                            //populateInfoWindow(this, largeInfowindow);
                         });
                     });
                     if (FSMarkers.length > 0 || fanMarkers.length > 0) {

@@ -106,7 +106,10 @@
                 Mechanical Room: <%= current.mechanicalRoom%><br>
                 Additional Notes: <%= current.additionalNotes%><br>
             <form action="/quickUpdateFan" method="post">
-                <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
+                <%let threeMonthMill; //this gets used in the javascript area next to the map section.
+                threeMonthMill = new Date().getTime() + 7776000000;
+                %>
+                <input type="date" name="nextDateToCheck" id="checkDate" /><br>
                 <input type="hidden" name="fanId" value="<%= current._id%>"/>
                 <input type="submit" value="<%= current.name%> maintained" />
             </form>
@@ -137,6 +140,7 @@
         </div>
         <div id="map"></div>
         <script type="text/javascript">
+            document.getElementById('checkDate').valueAsDate = new Date(<%=threeMonthMill%>);
             let map, marker = undefined, fanCenter = [];
             function initMap() {
                 fanCenter.push(<%- JSON.stringify(current.coordinates)%>);

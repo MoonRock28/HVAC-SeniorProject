@@ -10,26 +10,43 @@ const parallel = require('async').parallel;
 function saveFS(body, callback) {
     let functionArray = [];
     let lastDate = new Date();
-    let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
-    let newFS = {
-        name: body.name,
-        coordinates: {lat: body.lat, lng: body.lng},
-        buildingName: body.buildingName,
-        buildingId: body.buildingId,
-        floor: body.floor,
-        mechanicalRoom: body.mechanicalRoom,
-        nextDateToCheck: body.nextDateToCheck,
-        lastDateMaintained: lastDate,
-        statusColor: statusColor,
-        additionalNotes: body.additionalNotes
-    };
+    let newFS;
+    if (body.nextDateToCheck === undefined || body.nextDateToCheck === null || body.nextDateToCheck === "") {
+        let statusColor = colorService.getStatusColor(lastDate, lastDate);
+        newFS = {
+            name: body.name,
+            coordinates: {lat: body.lat, lng: body.lng},
+            buildingName: body.buildingName,
+            buildingId: body.buildingId,
+            floor: body.floor,
+            mechanicalRoom: body.mechanicalRoom,
+            nextDateToCheck: lastDate,
+            lastDateMaintained: lastDate,
+            statusColor: statusColor,
+            additionalNotes: body.additionalNotes
+        };
+    } else {
+        let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
+        newFS = {
+            name: body.name,
+            coordinates: {lat: body.lat, lng: body.lng},
+            buildingName: body.buildingName,
+            buildingId: body.buildingId,
+            floor: body.floor,
+            mechanicalRoom: body.mechanicalRoom,
+            nextDateToCheck: body.nextDateToCheck,
+            lastDateMaintained: lastDate,
+            statusColor: statusColor,
+            additionalNotes: body.additionalNotes
+        };
+    }
     //console.log(JSON.stringify(newAvu, null, 4));
 
     FSService.newFS(newFS, (err, objectId) => {
         functionArray.push( (cb) => {
             homeContent.getHomeContent( (err, homeRecord) => {
                 homeRecord.allFSs.push(objectId);
-                homeContent.editHomeContent(homeRecord, homeRecord._id, (err) => {
+                homeContent.editHomeContent(homeRecord, (err) => {
                     cb(null, objectId);
                 });
             });
@@ -155,7 +172,10 @@ function getFsInfo(objectId, callback) {
 
 function quickUpdate(nextDate, FsId, callback) {
     FSService.getFS(FsId, (err, record) => {
-        record.nextDateToCheck = nextDate;
+        if (nextDate === undefined || nextDate === null || nextDate === "")
+            record.nextDateToCheck = new Date();
+        else
+            record.nextDateToCheck = nextDate;
         record.lastDateMaintained = new Date();
         record.statusColor = colorService.getStatusColor(nextDate, record.lastDateMaintained);
         console.log("statusColor updated to " + record.statusColor);

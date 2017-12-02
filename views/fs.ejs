@@ -97,7 +97,7 @@
                     Mechanical Room: <%= current.mechanicalRoom%><br>
                     Additional Notes: <%= current.additionalNotes%><br>
                     <form action="/quickUpdateFS" method="post">
-                        <input type="date" name="nextDateToCheck" value="<%= new Date().toDateString()%>" /><br>
+                        <input type="date" name="nextDateToCheck" id="checkDate" /><br>
                         <input type="hidden" name="FSId" value="<%= current._id%>"/>
                         <input type="hidden" name="buildingId" value="<%= current.buildingId%>"/>
                         <input type="submit" value="<%= current.name%> maintained" />
@@ -147,6 +147,8 @@
 
             <div id="map"></div>
             <script type="text/javascript">
+                let threeMonthMill = new Date().getTime() + 5184000000;
+                document.getElementById('checkDate').valueAsDate = new Date(threeMonthMill);
                 let map, marker = undefined, FSCenter = [];
                 function initMap() {
                     FSCenter.push(<%- JSON.stringify(current.coordinates)%>);

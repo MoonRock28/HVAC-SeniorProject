@@ -9,27 +9,46 @@ const parallel = require('async').parallel;
 function saveFan(body, callback) {
     let functionArray = [];
     let lastDate = new Date();
-    let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
-    let newFan = {
-        name: body.name,
-        coordinates: {lat: body.lat, lng: body.lng},
-        buildingName: body.buildingName,
-        buildingId: body.buildingId,
-        floor: body.floor,
-        mechanicalRoom: body.mechanicalRoom,
-        fanSheave: body.fanSheave,
-        motorSheave: body.motorSheave,
-        nextDateToCheck: body.nextDateToCheck,
-        lastDateMaintained: lastDate,
-        statusColor: statusColor,
-        additionalNotes: body.additionalNotes
-    };
+    let newFan;
+    if (body.nextDateToCheck === undefined || body.nextDateToCheck === null || body.nextDateToCheck === "") {
+        let statusColor = colorService.getStatusColor(lastDate, lastDate);
+        newFan = {
+            name: body.name,
+            coordinates: {lat: body.lat, lng: body.lng},
+            buildingName: body.buildingName,
+            buildingId: body.buildingId,
+            floor: body.floor,
+            mechanicalRoom: body.mechanicalRoom,
+            fanSheave: body.fanSheave,
+            motorSheave: body.motorSheave,
+            nextDateToCheck: lastDate,
+            lastDateMaintained: lastDate,
+            statusColor: statusColor,
+            additionalNotes: body.additionalNotes
+        };
+    } else {
+        let statusColor = colorService.getStatusColor(body.nextDateToCheck, lastDate);
+        newFan = {
+            name: body.name,
+            coordinates: {lat: body.lat, lng: body.lng},
+            buildingName: body.buildingName,
+            buildingId: body.buildingId,
+            floor: body.floor,
+            mechanicalRoom: body.mechanicalRoom,
+            fanSheave: body.fanSheave,
+            motorSheave: body.motorSheave,
+            nextDateToCheck: body.nextDateToCheck,
+            lastDateMaintained: lastDate,
+            statusColor: statusColor,
+            additionalNotes: body.additionalNotes
+        };
+    }
 
     serveFan.newFan(newFan, (err, objectId) => {
         functionArray.push( (cb) => {
             homeService.getHomeContent( (err, homeRecord) => {
                 homeRecord.allFans.push(objectId);
-                homeService.editHomeContent(homeRecord, homeRecord._id, (err) => {
+                homeService.editHomeContent(homeRecord, (err) => {
                     cb(null, objectId);
                 });
             });
@@ -122,7 +141,10 @@ function getFanInfo(objectId, callback) {
 
 function quickUpdate(nextDate, fanId, callback) {
     serveFan.getFan(fanId, (err, record) => {
-        record.nextDateToCheck = nextDate;
+        if (nextDate === undefined || nextDate === null || nextDate === "")
+            record.nextDateToCheck = new Date();
+        else
+            record.nextDateToCheck = nextDate;
         record.lastDateMaintained = new Date();
         record.statusColor = colorService.getStatusColor(nextDate, record.lastDateMaintained);
         console.log("statusColor updated to " + record.statusColor);

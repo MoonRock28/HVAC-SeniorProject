@@ -13,7 +13,7 @@ function editFan(fan, objectId, callback) {
         record.name = fan.name;
         record.coordinates = {lat: fan.coordinates.lat, lng: fan.coordinates.lng};
         record.buildingName = fan.buildingName;
-        record.buildingId = fan.buildingId
+        record.buildingId = fan.buildingId;
         record.floor = fan.floor;
         record.mechanicalRoom = fan.mechanicalRoom;
         record.fanSheave = fan.fanSheave;

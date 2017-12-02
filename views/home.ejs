@@ -37,9 +37,9 @@
                     grid-template-areas:
                             "header header header header header header"
                             "nav nav nav nav nav nav"
-                            "buildings fss fans map map map"
-                            "buildings fss fans map map map"
-                            "buildings fss fans map map map"
+                            "fss fans map map map buildings"
+                            "fss fans map map map buildings"
+                            "fss fans map map map buildings"
                             "footer footer footer footer footer footer";
                 }
             }
@@ -138,6 +138,7 @@
                             map: map,
                             position: building.coordinates,
                             title: building.title,
+                            url: `/building?id=${building._id}`,
                             animation: google.maps.Animation.DROP,
                             id: i
                         });
@@ -146,10 +147,16 @@
                         bounds.extend(marker.position);
 
                         marker.addListener('click', () => {
-                            populateInfoWindow(this, largeInfowindow);
+                            console.log(marker.url);
+                            window.location.href = marker.url;
+                            //populateInfoWindow(this, largeInfowindow);
                         });
                     });
                     map.fitBounds(bounds);
+
+//                    google.maps.event.addListener(marker, 'click', function() {
+//                        window.location.href = this.url;
+//                    });
                 }
 
                 function populateInfoWindow(marker, infowindow) {
