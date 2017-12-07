@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fan: <%= current.name%></title>
+    <style>
+        .gridWrapper {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 10px;
+            background-color: #0076c6;
+            /*width: 960px;*/
+            margin: 0 auto;
+            border: 10px solid #0076c6;
+            grid-template-areas:
+                    "header header header header header header"
+                    "nav nav nav nav nav nav"
+                    "details details details details details ."
+                    "addBelts addBelts addBelts addBelts addBelts ."
+                    "map map map map map .";
+        }
+
+        @media screen and (min-width: 960px) {
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                        "header header header header header"
+                        "nav nav nav nav nav"
+                        "details addBelts map map map"
+                        "details addBelts map map map"
+                        "details addBelts map map map";
+            }
+        }
+
+        #header {
+            grid-area: header;
+            color: white;
+        }
+
+        #nav {
+            grid-area: nav;
+            background-color: white;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            border: 10px solid white;
+        }
+        .link {
+            background-color: white;
+            border: 3px solid #0076c6;
+            min-height: 30px;
+            text-align: center;
+        }
+
+        #details {
+            grid-area: details;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        #addBelts {
+            grid-area: addBelts;
+            background-color: white;
+        }
+
+        #map {
+            background-color: white;
+            grid-area: map;
+            width: 100%;
+            min-height: 400px;
+            position: fixed;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Inventory Manager</h1>
+        <h1>Fan: <%= current.name%></h1>
+    </div>
+    <div id="nav">
+        <a href="/home" class="link">Home</a>
+        <a href="/building?id=<%= current.buildingId%>" class="link"><%= current.buildingName%></a>
+    </div>
+
+    <div id="details">
+        <p>
+            Next Date To Check:<br><%= current.nextDateToCheck.toDateString()%><br>
+            Status Color: <%= current.statusColor%><br>
+            Fan Sheave: <%= current.fanSheave%><br>
+            Motor Sheave: <%= current.motorSheave%><br>
+            Building: <%= current.buildingName%><br>
+            Floor: <%= current.floor%><br>
+            Mechanical Room: <%= current.mechanicalRoom%><br>
+            Additional Notes: <%= current.additionalNotes%><br>
+        <form action="/quickUpdateFan" method="post">
+            <%let threeMonthMill; //this gets used in the javascript area next to the map section.
+            threeMonthMill = new Date().getTime() + 7776000000;
+            %>
+            <input type="date" name="nextDateToCheck" id="checkDate" /><br>
+            <input type="hidden" name="fanId" value="<%= current._id%>"/>
+            <input type="submit" value="<%= current.name%> maintained" />
+        </form>
+        </p>
+        <div id="reqBelts">
+            <h3>Required Belts:</h3>
+            <% belts.forEach( (belt) => {%>
+            <div class="belt">
+                <p> Type: <%= belt.type%><br>
+                    Amount: <%= belt.amount%>
+                </p>
+            </div>
+            <%});%>
+        </div>
+        <div id="extraBelts">
+            <h3>Extra Belts:</h3>
+            <% extras.forEach( (belt) => {%>
+            <div class="belt">
+                <p> Type: <%= belt.type%><br>
+                    Amount: <%= belt.amount%><br>
+                    <a href="/removeBelt?beltId=<%= belt._id%>&fanId=<%= current._id%>">Remove Belt</a>
+                </p>
+            </div>
+            <%});%>
+        </div>
+        <p>Last Date Maintained:<br><%= current.lastDateMaintained.toDateString()%></p>
+    </div>
+    <div id="map"></div>
+    <script type="text/javascript">
+        document.getElementById('checkDate').valueAsDate = new Date(<%=threeMonthMill%>);
+        let map, marker = undefined, fanCenter = [];
+        function initMap() {
+            fanCenter.push(<%- JSON.stringify(current.coordinates)%>);
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: fanCenter[0],
+                zoom: 20
+            });
+
+            marker = new google.maps.Marker({
+                position: fanCenter[0],
+                map: map
+            });
+        }
+    </script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+            async defer></script>
+    <div id="addBelts">
+        <form action="/addBelt" method="post">
+            <h4>Add Belt</h4>
+            <p>Belt: <select name="belt">
+                    <option value="extra">Extra(new ones nearby)</option>
+                </select></p>
+            <p>Type:<br><input type="text" name="type"/></p>
+            <p>Amount:<br><input type="number" name="amount"/></p>
+            <input type="hidden" name="id" value="<%= current._id%>"/>
+            <input type="submit" value="Add Belt"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

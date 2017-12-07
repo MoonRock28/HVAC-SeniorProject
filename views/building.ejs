@@ -219,7 +219,8 @@
                     <a href="/FS?id=<%= thisFS._id%>">
                         <p style="border: 3px solid <%= thisFS.statusColor%>">
                             <%= thisFS.name%><br>
-                            Check on: <br><%= thisFS.nextDateToCheck.toDateString()%>
+                            <%= thisFS.mechanicalRoom%><br>
+                            <%= thisFS.nextDateToCheck.toDateString()%>
                         </p>
                     </a>
                 <%})%>
@@ -230,7 +231,8 @@
                 <a href="/fan?id=<%= fan._id%>">
                     <p style="border: 3px solid <%= fan.statusColor%>">
                         <%= fan.name%><br>
-                        Check on: <br><%= fan.nextDateToCheck.toDateString()%>
+                        <%= fan.mechanicalRoom%><br>
+                        <%= fan.nextDateToCheck.toDateString()%>
                     </p>
                 </a>
                 <%})%>

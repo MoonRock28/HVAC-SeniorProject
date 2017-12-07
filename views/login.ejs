@@ -43,6 +43,17 @@
             #footer {
                 grid-area: footer;
                 background-color: white;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat(3, 1fr);
+                border: 10px solid white;
+            }
+
+            .link {
+                background-color: white;
+                border: 3px solid #0076c6;
+                min-height: 30px;
+                text-align: center;
             }
         </style>
     </head>
@@ -54,17 +65,18 @@
             <h1>Login</h1>
         </div>
         <div id="login">
-            <form action="/login" method="post">
+            <form action="/login" method="post" class="link">
                 <p>username:</p>
                 <input type="text" name="username"/>
                 <p>password:</p>
                 <input type="password" name="password"/>
-                <br>
+                <br><br>
                 <input type="submit" value="Login"/>
+                <p></p>
             </form>
         </div>
         <div id="footer">
-            <p><a href="https://www.byui.edu">BYU-Idaho Home</a></p>
+            <a href="https://www.byui.edu" class="link">BYU-Idaho Home</a>
         </div>
     </div>
     </body>

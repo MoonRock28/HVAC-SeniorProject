@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Building: <%= building.name%></title>
+    <style>
+        .gridWrapper {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 10px;
+            background-color: #0076c6;
+            /*width: 960px;*/
+            margin: 0 auto;
+            border: 10px solid #0076c6;
+            grid-template-areas:
+                    "header header header header header header"
+                    "nav nav nav nav nav nav"
+                    "details details details details details details"
+                    "FSs FSs FSs FSs FSs ."
+                    "fans fans fans fans fans ."
+                    "map map map map map ."
+                    "footer footer footer footer footer footer";
+        }
+
+        @media screen and (min-width: 960px) {
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                        "header header header header header"
+                        "nav nav nav nav nav"
+                        "details details map map map"
+                        "FSs fans map map map"
+                        "FSs fans map map map"
+                        "footer footer footer footer footer";
+            }
+        }
+        #header {
+            grid-area: header;
+            color: white;
+        }
+
+        #nav {
+            grid-area: nav;
+            background-color: white;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            border: 10px solid white;
+        }
+        .link {
+            background-color: white;
+            border: 3px solid #0076c6;
+            min-height: 30px;
+            text-align: center;
+        }
+
+        #details {
+            grid-area: details;
+            background-color: white;
+        }
+
+        #FSs {
+            grid-area: FSs;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        #fans {
+            grid-area: fans;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        #map {
+            background-color: white;
+            grid-area: map;
+            width: 100%;
+            min-height: 400px;
+            position: fixed;
+            overflow: auto;
+        }
+
+        #footer {
+            grid-area: footer;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Inventory Manager</h1>
+        <h1><%= building.name%> Building</h1>
+    </div>
+    <div id="nav">
+        <a href="/home" class="link">Home</a>
+    </div>
+
+    <div id="details">
+        <p style="border: 3px solid black">Black status color items: <%= building.numBlack%></p>
+        <p style="border: 3px solid red">Red status color items: <%= building.numRed%></p>
+    </div>
+    <div id="map"></div>
+    <script type="text/javascript">
+        let map;//, location, numRed, numBlack, id;
+        let FSs = [], fans = [];
+        let FSMarkers = [], fanMarkers = [], buildingCenter = [];
+
+
+        function initMap() {
+            buildingCenter.push(<%- JSON.stringify(building.coordinates)%>);
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: buildingCenter[0], //byuIdaho building
+                zoom: 19
+            });
+
+            <% if (FSs.length > 0) {
+            FSs.forEach( (thisFS) => {
+            %>
+            FSs.push(<%- JSON.stringify(thisFS)%>);
+            <% });
+            }%>
+
+            <% if (fans.length > 0) {
+            fans.forEach( (fan) => {
+            %>
+            fans.push(<%- JSON.stringify(fan)%>);
+            <% });
+            }%>
+
+            let largeInfowindow = new google.maps.InfoWindow();
+            let bounds = new google.maps.LatLngBounds();
+
+            FSs.forEach( (thisFS, i) => {
+                console.log(JSON.stringify(thisFS));
+                let marker = new google.maps.Marker({
+                    map: map,
+                    position: thisFS.coordinates,
+                    title: thisFS.title,
+                    url: `/fs?id=${thisFS._id}`,
+                    animation: google.maps.Animation.DROP,
+                    id: i
+                });
+                FSMarkers.push(marker);
+
+                bounds.extend(marker.position);
+
+                marker.addListener('click', () => {
+                    console.log(marker.url);
+                    window.location.href = marker.url;
+                    //populateInfoWindow(this, largeInfowindow);
+                });
+            });
+
+            fans.forEach( (fan, i) => {
+                console.log(JSON.stringify(fan));
+                let marker = new google.maps.Marker({
+                    map: map,
+                    position: fan.coordinates,
+                    title: fan.title,
+                    url: `/fan?id=${fan._id}`,
+                    animation: google.maps.Animation.DROP,
+                    id: i
+                });
+                fanMarkers.push(marker);
+
+                bounds.extend(marker.position);
+
+                marker.addListener('click', () => {
+                    console.log(marker.url);
+                    window.location.href = marker.url;
+                    //populateInfoWindow(this, largeInfowindow);
+                });
+            });
+            if (FSMarkers.length > 0 || fanMarkers.length > 0) {
+                map.fitBounds(bounds);
+            }
+        }
+
+        function populateInfoWindow(marker, infowindow) {
+            if (infowindow.marker !== marker) {
+                infowindow.marker = marker;
+                infowindow.setContent('<div>' + marker.title + '</div>');
+//                        infowindow.setContent('<div><a href="/building?id=' + marker.id + '">' + marker.title + '</a></div>' +
+//                            '<div>Black items: ' + marker.numBlack + '<br>Red items: ' + marker.numRed + '</div>');
+                infowindow.open(map, marker);
+
+                infowindow.addListener('closeclick', () => {
+                    infowindow.setMarker(null);
+                });
+            }
+        }
+    </script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+            async defer></script>
+    <div id="FSs">
+        <h3>Filtration Systems:</h3>
+        <% FSs.forEach( (thisFS) => {%>
+        <a href="/FS?id=<%= thisFS._id%>">
+            <p style="border: 3px solid <%= thisFS.statusColor%>">
+                <%= thisFS.name%><br>
+                <%= thisFS.mechanicalRoom%><br>
+                <%= thisFS.nextDateToCheck.toDateString()%>
+            </p>
+        </a>
+        <%})%>
+    </div>
+    <div id="fans">
+        <h3>Fans:</h3>
+        <% fans.forEach( (fan) => {%>
+        <a href="/fan?id=<%= fan._id%>">
+            <p style="border: 3px solid <%= fan.statusColor%>">
+                <%= fan.name%><br>
+                <%= fan.mechanicalRoom%><br>
+                <%= fan.nextDateToCheck.toDateString()%>
+            </p>
+        </a>
+        <%})%>
+    </div>
+    <div id="footer">
+        <p><span style="border: 3px solid black">Item past due.</span></p>
+        <p><span style="border: 3px solid red">Item due in less than a week.</span></p>
+        <p><span style="border: 3px solid orange">Item due in less than 2 weeks.</span></p>
+        <p><span style="border: 3px solid yellow">Item due within the month.</span></p>
+        <p><span style="border: 3px solid green">Item due in over a month.</span></p>
+        <p><span style="border: 3px solid blue">Item has been maintained earlier this week.</span></p>
+    </div>
+</div>
+</body>
+</html>

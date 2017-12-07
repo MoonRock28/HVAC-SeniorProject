@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<link rel="stylesheet" href="../src/assets/styles.css">-->
+    <!--<script src="../src/assets/homeMap.js"></script>-->
+    <title>Home</title>
+    <style>
+        .gridWrapper {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-gap: 10px;
+            background-color: #0076c6;
+            /*width: 100%;*/
+            margin: 0 auto;
+            border: 10px solid #0076c6;
+            grid-template-areas:
+                    "header header header header header header"
+                    "nav nav nav nav nav ."
+                    "buildings buildings buildings buildings buildings ."
+                    "fss fss fss fss fss ."
+                    "fans fans fans fans fans ."
+                    "map map map map map ."
+                    "map map map map map ."
+                    "map map map map map ."
+                    "footer footer footer footer footer footer";
+        }
+
+        @media screen and (min-width: 960px) { /* for desktop */
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                        "header header header header header header"
+                        "nav nav nav nav nav nav"
+                        "fss fans map map map buildings"
+                        "fss fans map map map buildings"
+                        "fss fans map map map buildings"
+                        "footer footer footer footer footer footer";
+            }
+        }
+
+        #header {
+            grid-area: header;
+            color: white;
+        }
+        #nav {
+            grid-area: nav;
+            background-color: white;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            border: 10px solid white;
+        }
+        .link {
+            background-color: white;
+            border: 3px solid #0076c6;
+            min-height: 30px;
+            text-align: center;
+        }
+        #buildings {
+            grid-area: buildings;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        #FSs {
+            grid-area: fss;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        #fans {
+            grid-area: fans;
+            background-color: white;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        #map {
+            background-color: white;
+            grid-area: map;
+            width: 100%;
+            min-height: 400px;
+            position: fixed;
+            overflow: auto;
+        }
+        #footer {
+            grid-area: footer;
+            background-color: white;
+        }
+        body {
+            height: 100%;
+
+        }
+    </style>
+</head>
+<body>
+<div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Inventory Manager</h1>
+        <h1>Home</h1>
+    </div>
+
+    <div id="nav">
+        <a href="/home" class="link">Home</a>
+        <a href="/logout" class="link">Log Out</a>
+    </div>
+
+    <div id="map">
+        <h4>Campus Map:</h4>
+    </div>
+    <script type="text/javascript">
+        let map;
+        let buildings = [], markers = [];
+
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 43.818378, lng: -111.782588}, //byuIdaho Manwaring center
+                zoom: 17
+            });
+
+            <% if (buildings.length > 0) {
+            buildings.forEach( (building) => { /*console.log(JSON.stringify(building, null, 4))*/
+//                        console.log(JSON.stringify(building._id));
+//                        let thisBuilding = building;
+//                        thisBuilding._id = JSON.stringify(building._id);
+            %>
+            buildings.push(<%- JSON.stringify(building)%>);
+            <% });
+            }%>
+
+            let largeInfowindow = new google.maps.InfoWindow();
+            let bounds = new google.maps.LatLngBounds();
+
+            buildings.forEach( (building, i) => {
+                console.log(JSON.stringify(building));
+                let marker = new google.maps.Marker({
+                    map: map,
+                    position: building.coordinates,
+                    title: building.title,
+                    url: `/building?id=${building._id}`,
+                    animation: google.maps.Animation.DROP,
+                    id: i
+                });
+                markers.push(marker);
+
+                bounds.extend(marker.position);
+
+                marker.addListener('click', () => {
+                    console.log(marker.url);
+                    window.location.href = marker.url;
+                    //populateInfoWindow(this, largeInfowindow);
+                });
+            });
+            map.fitBounds(bounds);
+
+//                    google.maps.event.addListener(marker, 'click', function() {
+//                        window.location.href = this.url;
+//                    });
+        }
+
+        function populateInfoWindow(marker, infowindow) {
+            if (infowindow.marker !== marker) {
+                infowindow.marker = marker;
+                //infowindow.setContent('<div>' + marker.title + '</div>');
+                infowindow.setContent('<div><a href="/building?id=' + marker.id + '">' + marker.title + '</a></div>' +
+                    '<div>Black items: ' + marker.numBlack + '<br>Red items: ' + marker.numRed + '</div>');
+                infowindow.open(map, marker);
+
+                infowindow.addListener('closeclick', () => {
+                    infowindow.setMarker(null);
+                });
+            }
+        }
+    </script>
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE6RA6882hKcQWpQ9GwKyOs7JwP8DOd0I&v=3&callback=initMap"
+            async defer></script>
+    <div id="buildings">
+        <h4>Buildings:</h4>
+        <% buildings.forEach( (building) => {%>
+        <div class="building">
+            <a href="/building?id=<%= building._id.toString()%>">
+                <p><%= building.name%><br>
+                    Black Items: <%= building.numBlack%><br>
+                    Red Items: <%= building.numRed%>
+                </p>
+            </a>
+        </div>
+        <% });%>
+    </div>
+
+    <div id="FSs">
+        <h4>Filtration Systems:</h4>
+        <% FSs.forEach( (thisFS) => {%>
+        <div class="FS">
+            <a href="/FS?id=<%= thisFS._id.toString()%>">
+                <p style="border: 3px solid <%= thisFS.statusColor%>">
+                    <%= thisFS.name%><br><%= thisFS.buildingName%><br>
+                    <%= thisFS.nextDateToCheck.toDateString()%></p>
+            </a>
+        </div>
+        <%})%>
+    </div>
+
+    <div id="fans">
+        <h4>Fans:</h4>
+        <% fans.forEach( (thisFan) => {%>
+        <div class="fan">
+            <a href="/fan?id=<%= thisFan._id.toString()%>">
+                <p style="border: 3px solid <%= thisFan.statusColor%>">
+                    <%= thisFan.name%><br><%= thisFan.buildingName%><br>
+                    <%= thisFan.nextDateToCheck.toDateString()%></p>
+            </a>
+        </div>
+        <%});%>
+    </div>
+
+    <div id="footer">
+        <p><span style="border: 3px solid black">Item past due.</span></p>
+        <p><span style="border: 3px solid red">Item due in less than a week.</span></p>
+        <p><span style="border: 3px solid orange">Item due in less than 2 weeks.</span></p>
+        <p><span style="border: 3px solid yellow">Item due within the month.</span></p>
+        <p><span style="border: 3px solid green">Item due in over a month.</span></p>
+        <p><span style="border: 3px solid blue">Item has been maintained earlier this week.</span></p>
+    </div>
+</div>
+</body>
+</html>

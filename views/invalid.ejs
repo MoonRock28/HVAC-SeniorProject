@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        .gridWrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+            background-color: #0076c6;
+            /*width: 960px;*/
+            margin: 0 auto;
+            border: 10px solid #0076c6;
+            grid-template-areas:
+                    "header"
+                    "message"
+                    "footer";
+        }
+
+        @media screen and (min-width: 960px) {
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-gap: 10px;
+                background-color: #0076c6;
+                width: 960px;
+                margin: 0 auto;
+                border: 10px solid #0076c6;
+                grid-template-areas:
+                        "header"
+                        "message"
+                        "footer";
+            }
+        }
+
+        #header {
+            grid-area: header;
+            color: white;
+        }
+
+        #message {
+            grid-area: message;
+            background-color: white;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            border: 10px solid white;
+        }
+
+        #footer {
+            grid-area: footer;
+            background-color: white;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            border: 10px solid white;
+        }
+
+        .link {
+            background-color: white;
+            border: 3px solid #0076c6;
+            min-height: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="gridWrapper">
+    <div id="header">
+        <img src=""/>
+        <h1>HVAC Inventory Manager</h1>
+        <h1>Invalid Credentials</h1>
+    </div>
+    <div id="message">
+        <h3>Error: Invalid Credentials, please try login again.</h3><br>
+        <a href="/" class="link">Login Page</a>
+    </div>
+    <div id="footer">
+        <a href="https://www.byui.edu" class="link">BYU-Idaho Home</a>
+    </div>
+</div>
+</body>
+</html>
